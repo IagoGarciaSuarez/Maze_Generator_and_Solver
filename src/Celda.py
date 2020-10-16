@@ -1,11 +1,11 @@
 class Celda():
-    def __init__(self, norte, este, sur, oeste, posicion, value=0):
-        self.norte = norte
-        self.este = este
-        self.sur = sur
-        self.oeste = oeste
-        self.posicion = posicion
+    def __init__(self, vecinos, posicion, value = 0):
         self.value = value
+        self.norte = vecinos[0]
+        self.este = vecinos[1]
+        self.sur = vecinos[2]
+        self.oeste = vecinos[3]
+        self.posicion = posicion
         self.visitada = False
 
     def __str__(self):
