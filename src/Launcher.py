@@ -19,13 +19,6 @@ asciiTitle = '''
 ╚██████╔╝███████╗██║░╚███║███████╗██║░░██║██║░░██║░░░██║░░░╚█████╔╝██║░░██║
 ░╚═════╝░╚══════╝╚═╝░░╚══╝╚══════╝╚═╝░░╚═╝╚═╝░░╚═╝░░░╚═╝░░░░╚════╝░╚═╝░░╚═╝
 '''
-
-def saveToImage(dibujoLab):
-    img = Image.new('RGB', (200, 100))
-    d = ImageDraw.Draw(img)
-    d.text((20, 20), dibujoLab, fill=(255, 0, 0))
-    img.save('test.png')
-
 def menuStart():
     print(asciiTitle)
     print('Bienvenid@, seleccione una opción para iniciar el programa:')
@@ -40,10 +33,7 @@ def menuStart():
                         break
                     else:
                         print("La ruta del fichero que ha introducido no es válida.")
-                dibujoLab = Laberinto(JSON, path)
-                with open('test.txt', 'w') as f:
-                    print(dibujoLab, file=f)
-                saveToImage(str(dibujoLab))
+                Laberinto(JSON, path).drawMaze()
                 break
             if utilizarJson == 2:
                 JSON = False

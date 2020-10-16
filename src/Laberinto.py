@@ -6,7 +6,7 @@ import random
 import sys
 import json
 import numpy
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from Celda import Celda
 
 class Laberinto():
@@ -85,28 +85,26 @@ class Laberinto():
                 row, col = cellPosTuple[0], cellPosTuple[1]
                 self.laberinto[row][col] = Celda(numpy.array(self.data_json["cells"][cellPos]["neighbors"], dtype=bool), (row, col))
     '''
-    Para dibujar el laberinto se irá imprimiendo línea por línea cada celda, únicamente comprobando si 
-    las celdas del sur y del este son visitables. En caso de que no lo sean, según la combinación de ambas
-    no visitables, se escribirán las paredes. Ädemás para la pared norte y oeste se escribirán los caracteres
-    manualmente ya que sólo se escribirán las paredes del sur y del este, por lo que no habría celdas
-    que comprobasen ese lado.
+    Las columnas corresponden al eje X y las filas al eje Y.
+    Para acceder a las posiciones del laberinto se accederá de forma que laberinto[y][x]
     '''
-    def __str__(self):
-        dibujo = ' ' + '_' * (self.columnas * 3 -1)+ '\n'
-        for col in range(self.filas):
-            for row in range(self.columnas):
-                if row == 0:
-                    dibujo += ('|')
-                if not self.laberinto[col][row].sur and self.laberinto[col][row].este:
-                    dibujo += ('___')
-                if not self.laberinto[col][row].sur and not self.laberinto[col][row].este:
-                    dibujo += ('__|')
-                if self.laberinto[col][row].sur and not self.laberinto[col][row].este:
-                    dibujo += ('  |')
-                if self.laberinto[col][row].sur and self.laberinto[col][row].este:
-                    dibujo += ('   ')
-            dibujo += ('\n')
-        return dibujo
+    def drawMaze(self):
+        plt.figure(figsize = (self.columnas, self.filas))
+        plt.xticks([])
+        plt.yticks()
+        plt.plot([0, self.columnas], [0, 0], color='black', linewidth=2)
+        plt.plot([0, 0], [0, self.filas], color='black', linewidth=2)
+        plt.plot([0, self.columnas], [self.filas, self.filas], color='black', linewidth=2)
+        plt.plot([self.columnas, self.columnas], [self.filas, 0], color='black', linewidth=2)
+
+        for col in range(self.columnas):
+            for row in range(self.filas):
+                row_inv = self.filas - row - 1
+                if not self.laberinto[row][col].sur:
+                    plt.plot([col, col+1], [row_inv, row_inv], color = 'black')
+                if not self.laberinto[row][col].este:
+                    plt.plot([col+1, col+1], [row_inv, row_inv+1], color = 'black')
+        plt.show()
     '''
     Algoritmo para generar el laberinto mediante el algoritmo de Wilson.
     '''
