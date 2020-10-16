@@ -1,1 +1,0 @@
-<Laberinto.Laberinto object at 0x7f0f68dbb0d0>
