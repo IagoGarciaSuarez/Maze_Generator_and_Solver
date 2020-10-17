@@ -8,6 +8,7 @@ import json
 import numpy
 import matplotlib.pyplot as plt
 from Celda import Celda
+from Movimiento import Movimiento
 
 class Laberinto():
     def __init__(self, jsonFile, path = None, size = None):        
@@ -72,7 +73,6 @@ class Laberinto():
                     else:
                         self.laberinto[i][j] = Celda((True, True, True, True), (i, j))
                         self.celdasNoVisitadas.add(self.laberinto[i][j])
-                    id+=1
 
             self.labGenerado = self.wilson()
 
@@ -87,6 +87,8 @@ class Laberinto():
     '''
     Las columnas corresponden al eje X y las filas al eje Y.
     Para acceder a las posiciones del laberinto se accederá de forma que laberinto[y][x]
+    De esta forma, dibujaremos las paredes exteriores del laberinto y para cada celda el sur y el este desde arriba a abajo
+    y de izquierda a derecha. 
     '''
     def drawMaze(self):
         plt.figure(figsize = (self.columnas, self.filas))
@@ -109,8 +111,54 @@ class Laberinto():
     Algoritmo para generar el laberinto mediante el algoritmo de Wilson.
     '''
     def wilson(self):
-        start = random.choice(self.laberinto[random.randint(0, self.filas-1)])
-        end = random.choice(self.laberinto[random.randint(0, self.filas-1)])
-        if not start == end:
-            print(start)
-            print(end)
+        direcciones = ["N", "E", "S", "O"]
+        '''
+        Se crea un array con todas las celdas no visitadas del laberinto, que al principio serán todas.
+        '''
+        celdasNoVisitadas = []
+        for x in range(self.filas):
+            for y in range(self.columnas):
+                celdasNoVisitadas.append(self.laberinto[x][y])
+        
+        '''
+        Se crean otros dos arrays: uno con las celdas que se hayan tocado en algún momento, aunque no se incluyan
+        en el camino final, y otro con las celdas que seguirá el camino final. En ambos arrays se guardarán objetos 
+        Movimiento que consistirán en una variable posición para establecer la posición de la celda actual y una 
+        variable dirección que será una de las 4 direcciones (N, E, S, O) correspondientes a un vector dirección para 
+        sumarle a la posición y obtener la siguiente celda.
+        '''
+        caminoProvisional = []
+        caminoFinal = []
+        '''
+        Se establece la primera celda, que siempre estará sin visitar, se cambia a visitada y se quita de la lista de 
+        celdas no visitadas.
+        '''
+        celdaInicio = random.choice(celdasNoVisitadas)
+        celdaInicio.visitada = True
+        celdasNoVisitadas.remove(celdaInicio)
+        '''
+        Ahora que tenemos la primera celda hecha, tenemos que encontrar otra celda aleatoria para poder unirlas y crear
+        así el camino. Este proceso se repetirá en bucle hasta que no haya más celdas en celdasNoVisitadas.
+        Empezamos escogiendo un item aleatorio de celdasNoVisitadas y otro de direcciones.
+        Ahora podemos comenzar a buscar un camino. Mientras no se haya encontrado un camino de unión entre los puntos
+        inicioCamino y una celda visitada(en la primera iteración esa celda será celdaInicio0) se generará un nuevo movimiento que
+        resultará en la celda próxima a la actual.
+        '''
+        while celdasNoVisitadas:
+            celdaActual = random.choice(celdasNoVisitadas)
+            celdaActualX, celdaActualY = celdaActual.posicion[0], celdaActual.posicion[1]
+            caminoTerminado = False
+
+            while not caminoTerminado:
+                direccion = random.choice(direcciones)
+                if direccion == "N" and celdaActual.Norte:
+                    for d in direcciones:
+                        try:
+                            posicionEnLista = caminoProvisional.index(Movimiento((celdaActualX + 0, celdaActualY + 1), d))
+                            if d == "N": celdaActual.Norte = False
+                            if d == "E": celdaActual.Este = False
+                            if d == "S": celdaActual.Sur = False
+                            if d == "O": celdaActual.Oeste = False
+                        
+                        except ValueError:
+                            caminoProvisional.append(Movimiento(celdaActual.posicion, direccion))
