@@ -5,8 +5,8 @@ class Movimiento():
 
     def diccionario(self):
         direcciones = {
-            "N" : (0, 1),
+            "N" : (0, -1),
             "E" : (1, 0),
-            "S" : (0, -1),
+            "S" : (0, 1),
             "O" : (-1, 0)
         }

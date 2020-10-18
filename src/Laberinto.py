@@ -154,7 +154,7 @@ class Laberinto():
                 if direccion == "N" and celdaActual.Norte:
                     for d in direcciones:
                         try:
-                            posicionEnLista = caminoProvisional.index(Movimiento((celdaActualX + 0, celdaActualY + 1), d))
+                            posicionEnLista = caminoProvisional.index(Movimiento((celdaActualX + 0, celdaActualY - 1), d))
                             if d == "N": celdaActual.Norte = False
                             if d == "E": celdaActual.Este = False
                             if d == "S": celdaActual.Sur = False
@@ -162,3 +162,40 @@ class Laberinto():
                         
                         except ValueError:
                             caminoProvisional.append(Movimiento(celdaActual.posicion, direccion))
+                 
+                if direccion == "E" and celdaActual.Este:
+                    for d in direcciones:
+                        try:
+                            posicionEnLista = caminoProvisional.index(Movimiento((celdaActualX + 1, celdaActualY + 0), d))
+                            if d == "N": celdaActual.Norte = False
+                            if d == "E": celdaActual.Este = False
+                            if d == "S": celdaActual.Sur = False
+                            if d == "O": celdaActual.Oeste = False
+                        
+                        except ValueError:
+                            caminoProvisional.append(Movimiento(celdaActual.posicion, direccion))            
+                if direccion == "S" and celdaActual.Sur:
+                    for d in direcciones:
+                        try:
+                            posicionEnLista = caminoProvisional.index(Movimiento((celdaActualX + 0, celdaActualY + 1), d))
+                            if d == "N": celdaActual.Norte = False
+                            if d == "E": celdaActual.Este = False
+                            if d == "S": celdaActual.Sur = False
+                            if d == "O": celdaActual.Oeste = False
+                        
+                        except ValueError:
+                            caminoProvisional.append(Movimiento(celdaActual.posicion, direccion))  
+                if direccion == "O" and celdaActual.Oeste:
+                    for d in direcciones:
+                        try:
+                            posicionEnLista = caminoProvisional.index(Movimiento((celdaActualX - 1, celdaActualY + 0), d))
+                            if d == "N": celdaActual.Norte = False
+                            if d == "E": celdaActual.Este = False
+                            if d == "S": celdaActual.Sur = False
+                            if d == "O": celdaActual.Oeste = False
+                        
+                        except ValueError:
+                            caminoProvisional.append(Movimiento(celdaActual.posicion, direccion))            
+                                      
+                
+
