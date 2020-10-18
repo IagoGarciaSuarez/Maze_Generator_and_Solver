@@ -107,58 +107,433 @@ class Laberinto():
                 if not self.laberinto[row][col].este:
                     plt.plot([col+1, col+1], [row_inv, row_inv+1], color = 'black')
         plt.show()
+    
     '''
     Algoritmo para generar el laberinto mediante el algoritmo de Wilson.
     '''
-    def wilson(self):
-        direcciones = ["N", "E", "S", "O"]
-        '''
-        Se crea un array con todas las celdas no visitadas del laberinto, que al principio serán todas.
-        '''
-        celdasNoVisitadas = []
-        for x in range(self.filas):
-            for y in range(self.columnas):
-                celdasNoVisitadas.append(self.laberinto[x][y])
+    # dada una celda, escoge una vecina aleatoria que no esté en el conjunto de las ya visitadas
+    def escogerVecina(self, celdaActual):
         
-        '''
-        Se crean otros dos arrays: uno con las celdas que se hayan tocado en algún momento, aunque no se incluyan
-        en el camino final, y otro con las celdas que seguirá el camino final. En ambos arrays se guardarán objetos 
-        Movimiento que consistirán en una variable posición para establecer la posición de la celda actual y una 
-        variable dirección que será una de las 4 direcciones (N, E, S, O) correspondientes a un vector dirección para 
-        sumarle a la posición y obtener la siguiente celda.
-        '''
-        caminoProvisional = []
-        caminoFinal = []
-        '''
-        Se establece la primera celda, que siempre estará sin visitar, se cambia a visitada y se quita de la lista de 
-        celdas no visitadas.
-        '''
-        celdaInicio = random.choice(celdasNoVisitadas)
-        celdaInicio.visitada = True
-        celdasNoVisitadas.remove(celdaInicio)
-        '''
-        Ahora que tenemos la primera celda hecha, tenemos que encontrar otra celda aleatoria para poder unirlas y crear
-        así el camino. Este proceso se repetirá en bucle hasta que no haya más celdas en celdasNoVisitadas.
-        Empezamos escogiendo un item aleatorio de celdasNoVisitadas y otro de direcciones.
-        Ahora podemos comenzar a buscar un camino. Mientras no se haya encontrado un camino de unión entre los puntos
-        inicioCamino y una celda visitada(en la primera iteración esa celda será celdaInicio0) se generará un nuevo movimiento que
-        resultará en la celda próxima a la actual.
-        '''
-        while celdasNoVisitadas:
-            celdaActual = random.choice(celdasNoVisitadas)
-            celdaActualX, celdaActualY = celdaActual.posicion[0], celdaActual.posicion[1]
-            caminoTerminado = False
+        celdaVecina = None
 
-            while not caminoTerminado:
-                direccion = random.choice(direcciones)
-                if direccion == "N" and celdaActual.Norte:
-                    for d in direcciones:
-                        try:
-                            posicionEnLista = caminoProvisional.index(Movimiento((celdaActualX + 0, celdaActualY + 1), d))
-                            if d == "N": celdaActual.Norte = False
-                            if d == "E": celdaActual.Este = False
-                            if d == "S": celdaActual.Sur = False
-                            if d == "O": celdaActual.Oeste = False
+        while celdaVecina == None:
+
+            # esquina superior izquierda
+            if celdaActual.posicion == (0,0) and celdaActual not in self.celdasVisitadas:
+            
+                vecina = random.randint(0,1)
+
+                # celda derecha
+                if vecina == 0:
+                    celdaVecina = self.laberinto[0][1]
+                
+                # celda inferior
+                else:
+                    celdaVecina = self.laberinto[1][0]
+        
+            # esquina superior derecha
+            elif celdaActual.posicion == (0, (self.columnas - 1)) and celdaActual not in self.celdasVisitadas:
+
+                vecina = random.randint(0, 1)
+
+                # celda izquierda
+                if vecina == 0:
+                    celdaVecina = self.laberinto[(self.filas - 2)][0]
+                
+                # celda inferior
+                else:
+                    celdaVecina = self.laberinto[1][(self.columnas - 1)]
+        
+            # esquina inferior izquierda
+            elif celdaActual.posicion == ((self.filas - 1), 0) and celdaActual not in self.celdasVisitadas:
+
+                vecina = random.randint(0, 1)
+
+                # celda superior    
+                if vecina == 0:
+                    celdaVecina = self.laberinto[self.filas - 2][0]
+                
+                # celda derecha
+                else:
+                    celdaVecina = self.laberinto[self.filas - 1][1]
+            
+            # esquina inferior derecha
+            elif celdaActual.posicion == ((self.filas - 1), (self.columnas - 1)) and celdaActual not in self.celdasVisitadas:
+
+                vecina = random.randint(0, 1)
+
+                # celda superior
+                if vecina == 0:
+                    celdaVecina = self.laberinto[self.filas - 2][self.columnas - 1]
+                #celda izquierda
+                else:
+                    celdaVecina = self.laberinto[self.filas - 1][self.columnas - 2]
+            
+            # fila superior
+            elif celdaActual.posicion[0] == 0 and celdaActual not in self.celdasVisitadas:
+
+                vecina = random.randint(0, 2)
+
+                # celda izquierda
+                if vecina == 0:
+
+                    celdaVecina = self.laberinto[0][celdaActual.posicion[1] - 1]
+                
+                # celda derecha
+                elif vecina == 1:
+                    
+                    celdaVecina = self.laberinto[0][celdaActual.posicion[1] + 1]
+                # celda de abajo
+                elif vecina == 2:
+
+                    celdaVecina = self.laberinto[1][celdaActual.posicion[1]]
+                
+            # fila inferior
+            elif celdaActual.posicion[0] == self.filas - 1 and celdaActual not in self.celdasVisitadas:
+                
+                vecina = random.randint(0, 2)
+                
+                # celda izquierda
+                if vecina == 0:
+
+                    celdaVecina = self.laberinto[self.filas - 1][celdaActual.posicion[1] - 1]
+                
+                # celda derecha
+                elif vecina == 1:
+                    
+                    celdaVecina = self.laberinto[self.filas - 1][celdaActual.posicion[1] + 1]
+                
+                # celda superior
+                elif vecina == 2:
+
+                    celdaVecina = self.laberinto[self.filas - 2][celdaActual.posicion[1]]
+
+
+            # columna izquierda
+            elif celdaActual.posicion[1] == 0 and celdaActual not in self.celdasVisitadas:
+            
+                vecina = random.randint(0, 2)
+                # celda superior
+                if vecina == 0:
+
+                    celdaVecina = self.laberinto[celdaActual.posicion[0]- 1][0]
+                
+                # celda inferior
+                elif vecina == 1:
+                    
+                    celdaVecina = self.laberinto[celdaActual.posicion[0] + 1][0]
+                # celda derecha
+                elif vecina == 2:
+
+                    celdaVecina = self.laberinto[celdaActual.posicion[0]][1]
+                
+            # columna derecha
+            elif celdaActual.posicion[1] == self.columnas - 1 and celdaActual not in self.celdasVisitadas:
+                
+                vecina = random.randint(0, 2)
+                # celda superior
+                if vecina == 0:
+
+                    celdaVecina = self.laberinto[celdaActual.posicion[0] - 1][celdaActual.posicion[1]]
+                
+                # celda inferior
+                elif vecina == 1:
+                    
+                    celdaVecina = self.laberinto[celdaActual.posicion[0] + 1][celdaActual.posicion[1]]
+                # celda izquierda
+                elif vecina == 2:
+
+                    celdaVecina = self.laberinto[celdaActual.posicion[0]][celdaActual.posicion[1] - 1]
+
+                
+            # celda interior
+            elif celdaActual not in self.celdasVisitadas:
+                
+                # 4 posibles vecinas
+                vecina = random.randint(0, 3)
+                # celda superior 
+                if vecina == 0:
+
+                    celdaVecina = self.laberinto[celdaActual.posicion[0] - 1][celdaActual.posicion[1]]
+                
+                #celda inferior
+                elif vecina == 1:
+                    
+                    celdaVecina = self.laberinto[celdaActual.posicion[0] + 1][celdaActual.posicion[1]]
+
+                # celda izquierda
+                elif vecina == 2:
+
+                    celdaVecina = self.laberinto[celdaActual.posicion[0]][celdaActual.posicion[1] - 1]
+                
+                # celda derecha
+                else:
+
+                    celdaVecina = self.laberinto[celdaActual.posicion[0]][celdaActual.posicion[1] + 1]
+
+            return celdaVecina
+            
+
+
+    # genera un camino aleatorio sin bucles de celda inicial a una de las celdas visitadas
+    def generarCamino(self, celdaInicial, conjuntoDeCeldasVisitadas):
+        
+        camino = list()
+        
+        conjuntoAuxiliar = set()
+
+        for i in conjuntoDeCeldasVisitadas:
+            
+            conjuntoAuxiliar.add(i)
+
+        celdaActual = celdaInicial
+        
+        celdaFinal = conjuntoAuxiliar.pop()
+        
+        posicionDePartida = celdaInicial.posicion
+
+        while(celdaActual.posicion != celdaFinal.posicion):
+            
+            celda = self.escogerVecina(celdaActual)
+            
+            if celda not in camino:
+                
+                camino.append(celda)
+                celdaActual = celda
+            
+           
+           
+            # hemos producido un bucle
+            
+            if celdaInicial.posicion == celdaActual.posicion:
+                camino.clear()
+                break
+        
+        return camino
+
+
+    # celda = (norte, este, sur, oeste) - Sentido de las agujas del reloj
+    # vecino = True
+    # pared = False
+
+    def excabarCamino(self, camino):
+
+        i = 0
+        
+        while i < len(camino) - 1:
+            
+            celda = camino[i]
+            
+            celdaContigua = camino[i + 1]
+            
+            i = i + 1
+
+            # indices de las posiciones de las celdas en el laberinto
+            x1 = celda.posicion[0]
+            y1 = celda.posicion[1]
+            
+            x2 = celdaContigua.posicion[0]
+            y2 = celdaContigua.posicion[1]
+
+            # esquina superior izquierda. Las contiguas pueden ser:
+            if x1 == 0 and y1 == 0:
+                
+                # derecha
+                if y1 == 1:
+                    
+                    self.laberinto[0][0].este = True
+                    self.laberinto[0][1].oeste = True
+                
+                # inferior
+                else:
+                    
+                    self.laberinto[0][0].sur = True
+                    self.laberinto[1][0].norte = True
+                           
+            # esquina superior derecha. Las contiguas pueden ser:
+            elif x1 == 0 and y1 == self.columnas - 1:
+
+                #izquierda
+                if y1 == y2 - 1:
+                    
+                    self.laberinto[0][self.columnas - 2].oeste = True
+                    self.laberinto[0][1].oeste = True
+                
+                #inferior
+                else:
+                    
+                    self.laberinto[x1][y1].sur = True
+                    self.laberinto[x2][y2].norte = True
+                    
+            # esquina inferior izquierda. La contigua esta
+            elif x1 == self.filas - 1 and y1 == 0:
+                    
+                    # arriba
+                    if x2 == self.filas - 2 and y2 == 0:
+
+                        self.laberinto[x1][y2].norte = True
+                        self.laberinto[x2][y2].sur = True
+                    
+                    # a la derecha
+                    else:
                         
-                        except ValueError:
-                            caminoProvisional.append(Movimiento(celdaActual.posicion, direccion))
+                        self.laberinto[x1][y1].este = True
+                        self.laberinto[x1][y2].oeste = True
+                    
+
+            # esquina inferior derecha. La contigua esta
+            elif x1 == self.filas - 1 and y1 == self.columnas - 1:
+                    
+                # arriba
+                if x1 == x2 - 1 and y1 == y2:
+
+                    self.laberinto[x1][y1].norte = True
+                    self.laberinto[x2][y2].sur = True
+                    
+                # a la izquierda
+                else:
+
+                    self.laberinto[x1][y1].oeste = True
+                    self.laberinto[x2][y2].este = True
+
+            # fila superior. La contigua esta
+            elif x1 == 0:
+                
+                # a la izquierda
+                if y1 == y2 - 1:
+                    
+                    self.laberinto[x1][y1].oeste = True
+                    self.laberinto[x2][y2].este = True
+                
+                # a la derecha
+                elif y1 == y2 + 1:
+
+                    self.laberinto[x1][y1].este = True
+                    self.laberinto[x2][y2].oeste = True
+
+                # debajo
+                else:
+
+                    self.laberinto[x1][y1].sur = True
+                    self.laberinto[x2][y2].norte = True
+                
+
+            # fila inferior. La contigua esta a la
+            elif x1 == self.filas - 1:
+
+                # izquierda
+                if y1 == y2 - 1:
+                    
+                    self.laberinto[x1][y1].oeste = True
+                    self.laberinto[x2][y2].este = True
+                
+                #derecha
+                elif y1 == y2 + 1:
+
+                    self.laberinto[x1][y1].este = True
+                    self.laberinto[x2][y2].oeste = True
+
+                # arriba
+                else:
+
+                    self.laberinto[x1][y1].norte = True
+                    self.laberinto[x2][y2].sur = True
+                    
+            # columna izquierda. La contigua esta
+            elif y1 == 0:
+
+                # arriba
+                if x1 == x2 - 1:
+            
+                    self.laberinto[x1][y1].norte = True
+                    self.laberinto[x2][y2].sur = True
+                    
+                # abajo
+                elif x1 == x2 + 1:
+
+                    self.laberinto[x1][y1].sur = True
+                    self.laberinto[x2][y2].norte = True
+
+                # a la derecha
+                else:
+
+                    self.laberinto[x1][y1].este = True
+                    self.laberinto[x2][y2].oeste = True
+
+            # columna derecha. La contigua esta
+            elif x1 == self.columnas - 1:
+
+                # arriba
+                if x1 == x2 - 1:
+
+                    self.laberinto[x1][y1].sur = True
+                    self.laberinto[x2][y2].norte = True                    
+                    
+                # abajo
+                if x1 == x2 + 1:
+                    
+                    self.laberinto[x1][y1].norte = True
+                    self.laberinto[x2][y2].sur = True
+                
+                # a la izquierda
+                else:
+
+                    self.laberinto[x1][y1].oeste = True
+                    self.laberinto[x2][y2].este = True
+                                    
+            # celda interior. La contigua esta
+            else:
+
+                # arriba
+                if x1 == x2 - 1 and y1 == y2:
+                    
+                    self.laberinto[x1][y1].sur = True
+                    self.laberinto[x2][y2].norte = True
+
+                # abajo
+                elif x1 == x2 + 1 and y1 == y2:
+
+                    self.laberinto[x1][y1].norte = True
+                    self.laberinto[x2][y2].sur = True
+
+                # izquierda
+                elif x1 == x2 and y1 == y2 + 1:
+
+                    self.laberinto[x1][y1].este = True
+                    self.laberinto[x2][y2].oeste = True 
+
+                # derecha
+                else:
+
+                    self.laberinto[x1][y1].oeste = True
+                    self.laberinto[x2][y2].este = True
+
+                                       
+    def wilson(self):
+        
+        # partimos de la celda inicial y la contamos como visitada
+        i = 0
+        j = 0
+        
+        celdaInicial = self.laberinto[i][j]
+        self.celdasVisitadas.add(celdaInicial)
+        
+        #elegimos otra celda distinta de manera aleatoria y la añadimos a las visitadas
+        
+        while not (i == 0 and j == 0):
+            i = random.randint(0, (self.filas - 1))
+            j = random.randint(0, (self.columnas - 1))
+
+        celdaActual = self.laberinto[i][j]
+        self.celdasVisitadas.add(celdaActual)
+
+        while len(self.celdasNoVisitadas) > 0:
+            
+            camino = self.generarCamino(celdaActual, self.celdasVisitadas)
+
+            for i in camino:
+                self.celdasVisitadas.add(i)
+            
+            self.excabarCamino(camino)
+
+            celdaActual = self.celdasNoVisitadas.pop()
