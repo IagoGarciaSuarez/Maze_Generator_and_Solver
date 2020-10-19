@@ -151,51 +151,58 @@ class Laberinto():
 
             while not caminoTerminado:
                 direccion = random.choice(direcciones)
-                if direccion == "N" and celdaActual.Norte:
-                    for d in direcciones:
-                        try:
-                            posicionEnLista = caminoProvisional.index(Movimiento((celdaActualX + 0, celdaActualY - 1), d))
-                            if d == "N": celdaActual.Norte = False
-                            if d == "E": celdaActual.Este = False
-                            if d == "S": celdaActual.Sur = False
-                            if d == "O": celdaActual.Oeste = False
+                if direccion == "N" and celdaActual.norte:
+                    try:
+                        'encontrar la posicion en camino provisional SOLO comparando las coordenadas'
+                        posicionEnLista = caminoProvisional.index(Movimiento((celdaActualX, celdaActualY )))
+                        'insertamos la misma celda actualizando la posicion'
+                        caminoProvisional.insert(posicionEnLista,Movimiento(celdaActual.posicion, direccion))
+                        caminoProvisional.pop(posicionEnLista+1)
                         
-                        except ValueError:
-                            caminoProvisional.append(Movimiento(celdaActual.posicion, direccion))
+                        'hacemos que la celda actual sea la siguiente en la direccion elegida'
+                        celdaActual.posicion[0], celdaActual.posicion[1]-1
+
+                    except ValueError:
+
+                        'si no esta la ponemos en la lista y actualizamos a la siguiente celda'
+                        caminoProvisional.append(Movimiento(celdaActual.posicion, direccion))
+                        celdaActual.posicion[0], celdaActual.posicion[1]-1
+                    'Por ultimo miramos si la celda nueva es ya visitada si es asi salimos del bucle'
+                    if celdaActual not in celdasNoVisitadas:
+                        ultimaCelda = celdaActual
+                        caminoTerminado = True
                  
                 if direccion == "E" and celdaActual.Este:
                     for d in direcciones:
                         try:
-                            posicionEnLista = caminoProvisional.index(Movimiento((celdaActualX + 1, celdaActualY + 0), d))
-                            if d == "N": celdaActual.Norte = False
-                            if d == "E": celdaActual.Este = False
-                            if d == "S": celdaActual.Sur = False
-                            if d == "O": celdaActual.Oeste = False
+                            posicionEnLista = caminoProvisional.index(Movimiento((celdaActualX + 1, celdaActualY + 0)))
                         
                         except ValueError:
                             caminoProvisional.append(Movimiento(celdaActual.posicion, direccion))            
                 if direccion == "S" and celdaActual.Sur:
                     for d in direcciones:
                         try:
-                            posicionEnLista = caminoProvisional.index(Movimiento((celdaActualX + 0, celdaActualY + 1), d))
-                            if d == "N": celdaActual.Norte = False
-                            if d == "E": celdaActual.Este = False
-                            if d == "S": celdaActual.Sur = False
-                            if d == "O": celdaActual.Oeste = False
-                        
+                            posicionEnLista = caminoProvisional.index(Movimiento((celdaActualX + 0, celdaActualY + 1)))
+
                         except ValueError:
                             caminoProvisional.append(Movimiento(celdaActual.posicion, direccion))  
                 if direccion == "O" and celdaActual.Oeste:
                     for d in direcciones:
                         try:
-                            posicionEnLista = caminoProvisional.index(Movimiento((celdaActualX - 1, celdaActualY + 0), d))
-                            if d == "N": celdaActual.Norte = False
-                            if d == "E": celdaActual.Este = False
-                            if d == "S": celdaActual.Sur = False
-                            if d == "O": celdaActual.Oeste = False
+                            posicionEnLista = caminoProvisional.index(Movimiento((celdaActualX - 1, celdaActualY + 0)))
+
                         
                         except ValueError:
                             caminoProvisional.append(Movimiento(celdaActual.posicion, direccion))            
                                       
-                
+            'ponemos en camino final la primera celda del provisional que sabremos que siempre sera parte del camino'                          
+            caminoFinal.append(caminoProvisional[0])
+
+            Final = False
+            
+            'aqui pasamos del camino provisional al final eligiendo celda validas'
+            while not Final:
+                cam
+            
+
 
