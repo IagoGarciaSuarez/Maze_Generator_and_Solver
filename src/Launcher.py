@@ -37,7 +37,7 @@ def menuStart():
             if utilizarJson == 2:
                 JSON = False
                 SIZE = (int(input('Introduzca el número de columnas: ')), int(input('Introduzca el número de filas: ')))
-                print(Laberinto(JSON, size = SIZE))
+                Laberinto(JSON, None, SIZE).drawMaze()
                 break
             if utilizarJson not in [1, 2]: 
                 print('Error al introducir la opción, por favor escriba una de las opciones válidas.')
