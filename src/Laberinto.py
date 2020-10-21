@@ -4,13 +4,14 @@
 
 import random
 import sys
+import os
 import json
 import numpy
 import matplotlib.pyplot as plt
 from Celda import Celda
 
 class Laberinto():
-    def __init__(self, jsonFile, path = None, size = None):        
+    def __init__(self, jsonFile, path, size = None):        
         ''' 
         Si existe un json con los datos del laberinto, se cargarán; si no, 
         se asignarán los valores introducidos por el usuario.
@@ -21,6 +22,7 @@ class Laberinto():
             self.filas = self.data_json["rows"]
             self.columnas = self.data_json["cols"]
         else:
+            self.savePath = path
             self.filas = size[0]
             self.columnas = size[1]
         self.laberinto = [[None for i in range(self.columnas)] for j in range(self.filas)]
@@ -38,6 +40,7 @@ class Laberinto():
                     self.laberinto[i][j] = Celda((False, False, False, False), (i, j))
                     self.celdasNoVisitadas.add(self.laberinto[i][j])
             self.wilson()
+            self.saveJson()
         else:
             '''
             Lee el json y le asigna las variables a cada celda para imprimirlo posteriormente.
@@ -72,7 +75,6 @@ class Laberinto():
         celdaInicio = random.choice(celdasNoVisitadas)
         celdaInicio.visitada = True
         celdasNoVisitadas.remove(celdaInicio)
-        print(celdaInicio)
         '''
         Ahora que tenemos la primera celda hecha, tenemos que encontrar otra celda aleatoria para poder unirlas y crear
         así el camino. Este proceso se repetirá en bucle hasta que no haya más celdas en celdasNoVisitadas.
@@ -127,22 +129,41 @@ class Laberinto():
             for c in caminoFinal:
                 x, y, d = c[0], c[1], c[2]
                 if d == "N":
-                    self.laberinto[x][y].Norte = True
-                    self.laberinto[x][y+1].Sur = True
+                    self.laberinto[x][y].norte = True
+                    self.laberinto[x][y+1].sur = True
                 elif d == "E":
-                    self.laberinto[x][y].Este = True
-                    self.laberinto[x+1][y].Oeste = True
+                    self.laberinto[x][y].este = True
+                    self.laberinto[x+1][y].oeste = True 
                 elif d == "S":
-                    self.laberinto[x][y].Sur = True
-                    self.laberinto[x][y-1].Norte = True
+                    self.laberinto[x][y].sur = True
+                    self.laberinto[x][y-1].norte = True
                 elif d == "O":
-                    self.laberinto[x][y].Oeste = True
-                    self.laberinto[x-1][y].Este = True
-                
+                    self.laberinto[x][y].oeste = True
+                    self.laberinto[x-1][y].este = True                
                 self.laberinto[x][y].visitada = True
                 numNoVisitadas -= 1
-                print(caminoFinal)
-            return self.laberinto
+        return self.laberinto
+
+    def saveJson(self):
+        diccionarioJSON = dict()
+        diccionarioJSON["rows"] = self.filas
+        diccionarioJSON["cols"] = self.columnas
+        diccionarioJSON["max_n"] = 4
+        diccionarioJSON["mov"] = [[-1,0],[0,1],[1,0],[0,-1]]
+        diccionarioJSON["id_mov"] = ["N","E","S","O"]
+
+        cells = dict()
+        for i in range(self.filas):
+            for j in range(self.columnas):
+                coordenadaXY = "(" + str(i) + ", " + str(j) + ")"
+                diccionarioCoordenadaCelda = dict()
+                diccionarioCoordenadaCelda["value"] = 0
+                
+                diccionarioCoordenadaCelda["neighbors"] = [self.laberinto[i][j].norte, self.laberinto[i][j].este, 
+                self.laberinto[i][j].sur, self.laberinto[i][j].oeste]
+                cells[coordenadaXY] = diccionarioCoordenadaCelda
+                diccionarioJSON["cells"] = cells
+        json.dump(diccionarioJSON, open(self.savePath, "w"), indent=3)
 
     '''
     Las columnas corresponden al eje X y las filas al eje Y.
@@ -165,9 +186,9 @@ class Laberinto():
                 if not self.laberinto[row][col].sur:
                     plt.plot([col, col+1], [row_inv, row_inv], color = 'black')
                 if not self.laberinto[row][col].este:
-                    plt.plot([col+1, col+1], [row_inv, row_inv+1], color = 'black')
+                    plt.plot([col+1, col+1], [row_inv+1, row_inv], color = 'black')
                 if not self.laberinto[row][col].norte:
                     plt.plot([col, col+1], [row_inv+1, row_inv+1], color = 'black')
                 if not self.laberinto[row][col].oeste:
                     plt.plot([col, col], [row_inv, row_inv+1], color = 'black')
-        plt.show()
+        plt.savefig("Laberinto.png")

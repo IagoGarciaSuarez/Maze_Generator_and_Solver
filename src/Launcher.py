@@ -36,8 +36,9 @@ def menuStart():
                 break
             if utilizarJson == 2:
                 JSON = False
+                path = input("Introduzca el nombre del archivo json donde se almacenará el laberinto:\n ")
                 SIZE = (int(input('Introduzca el número de columnas: ')), int(input('Introduzca el número de filas: ')))
-                Laberinto(JSON, None, SIZE).drawMaze()
+                Laberinto(JSON, path, SIZE).drawMaze()
                 break
             if utilizarJson not in [1, 2]: 
                 print('Error al introducir la opción, por favor escriba una de las opciones válidas.')
