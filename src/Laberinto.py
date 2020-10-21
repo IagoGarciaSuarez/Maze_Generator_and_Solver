@@ -39,33 +39,6 @@ class Laberinto():
                     self.celdasNoVisitadas.add(self.laberinto[i][j])
             self.wilson()
 
-            path = input("Introduzca el nombre del archivo json donde se almacenará el laberinto:\n ")
-
-            diccionarioJSON = dict()
-            diccionarioJSON["rows"] = self.filas
-            diccionarioJSON["cols"] = self.columnas
-            diccionarioJSON["max_n"] = 4
-            diccionarioJSON["mov"] = [[-1,0],[0,1],[1,0],[0,-1]]
-            diccionarioJSON["id_mov"] = ["N","E","S","O"]
-
-            cells = dict()         
-            for i in range(self.filas):
-                for j in range(self.columnas):
-                    coordenadaXY = "(" + str(i) + ", " + str(j) + ")"
-                    diccionarioCoordenadaCelda = dict()
-                    diccionarioCoordenadaCelda["value"] = 0
-                    celda = self.laberinto[i][j]
-                    diccionarioCoordenadaCelda["neighbors"] = [celda.norte, celda.este, celda.sur, celda.oeste]
-                    cells[coordenadaXY] = diccionarioCoordenadaCelda
-                    diccionarioJSON["cells"] = cells
-            
-            archivo = open(path, "w")
-            
-            json.dump(diccionarioJSON, archivo, indent=3)
-            
-            archivo.close()
-
-
         else:
             '''
             Lee el json y le asigna las variables a cada celda para imprimirlo posteriormente.
@@ -170,6 +143,33 @@ class Laberinto():
                 self.laberinto[x][y].visitada = True
                 numNoVisitadas -= 1
                 print(caminoFinal)
+
+            path = input("Introduzca el nombre del archivo json donde se almacenará el laberinto:\n ")
+
+            diccionarioJSON = dict()
+            diccionarioJSON["rows"] = self.filas
+            diccionarioJSON["cols"] = self.columnas
+            diccionarioJSON["max_n"] = 4
+            diccionarioJSON["mov"] = [[-1,0],[0,1],[1,0],[0,-1]]
+            diccionarioJSON["id_mov"] = ["N","E","S","O"]
+
+            cells = dict()         
+            for i in range(self.filas):
+                for j in range(self.columnas):
+                    coordenadaXY = "(" + str(i) + ", " + str(j) + ")"
+                    diccionarioCoordenadaCelda = dict()
+                    diccionarioCoordenadaCelda["value"] = 0
+                    celda = self.laberinto[i][j]
+                    diccionarioCoordenadaCelda["neighbors"] = [celda.norte, celda.este, celda.sur, celda.oeste]
+                    cells[coordenadaXY] = diccionarioCoordenadaCelda
+                    diccionarioJSON["cells"] = cells
+            
+            archivo = open(path, "w")
+            
+            json.dump(diccionarioJSON, archivo, indent=3)
+            
+            archivo.close()
+            
             return self.laberinto
 
     '''
