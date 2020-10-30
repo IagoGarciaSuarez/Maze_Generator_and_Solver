@@ -26,7 +26,6 @@ class Laberinto():
             self.filas = size[0]
             self.columnas = size[1]
         self.laberinto = [[None for i in range(self.columnas)] for j in range(self.filas)]
-        self.celdasNoVisitadas = set()
 
         if not jsonFile:
             '''
@@ -38,7 +37,6 @@ class Laberinto():
             for i in range(self.filas):
                 for j in range(self.columnas):
                     self.laberinto[i][j] = Celda((False, False, False, False), (i, j))
-                    self.celdasNoVisitadas.add(self.laberinto[i][j])
             self.wilson()
             self.saveJson()
         else:
@@ -55,10 +53,10 @@ class Laberinto():
     def wilson(self):
         direcciones = ["N", "E", "S", "O"]
         valorDir = {
-            "N" : (0, 1),
-            "E" : (1, 0),
-            "S" : (0, -1),
-            "O" : (-1, 0)
+            "N" : (1, 0),
+            "E" : (0, 1),
+            "S" : (-1, 0),
+            "O" : (0, -1)
         }
         '''
         Se crea un array con todas las celdas no visitadas del laberinto, que al principio serán todas.
@@ -92,8 +90,8 @@ class Laberinto():
             caminoFinal = []
             caminoProvisional = [[None for i in range(self.columnas)] for j in range(self.filas)]
             celdaInicioCamino = random.choice(celdasNoVisitadas)
-            inicioCaminoX, inicioCaminoY = celdaInicioCamino.posicion[0], celdaInicioCamino.posicion[1]
-            celdaActualX, celdaActualY = inicioCaminoX, inicioCaminoY
+            inicioCaminoFila, inicioCaminoColumna = celdaInicioCamino.posicion[0], celdaInicioCamino.posicion[1]
+            celdaActualFila, celdaActualColumna = inicioCaminoFila, inicioCaminoColumna
             caminoEncontrado = False
 
             while not caminoEncontrado:
@@ -102,45 +100,45 @@ class Laberinto():
                 de los límites y si es el caso, será válida.
                 '''
                 direccion = random.choice(direcciones)
-                destinoX, destinoY = celdaActualX + valorDir[direccion][0], celdaActualY + valorDir[direccion][1]
-                if destinoX in range(self.columnas) and destinoY in range(self.filas):
-                    caminoProvisional[celdaActualX][celdaActualY] = direccion
+                destinoFila, destinoColumna = celdaActualFila + valorDir[direccion][0], celdaActualColumna + valorDir[direccion][1]
+                if destinoColumna in range(self.columnas) and destinoFila in range(self.filas):
+                    caminoProvisional[celdaActualFila][celdaActualColumna] = direccion
                     '''
                     Si la celda destino ya está visitada, habremos unido el punto aleatorio con el camino ya excavado del laberinto.
                     Si no está visitada, la celda destino pasará a ser la celda actual.
                     '''
-                    if self.laberinto[destinoX][destinoY].visitada:
+                    if self.laberinto[destinoFila][destinoColumna].visitada:
                         caminoEncontrado = True
                     else:
-                        celdaActualX, celdaActualY = destinoX, destinoY
+                        celdaActualFila, celdaActualColumna = destinoFila, destinoColumna
             '''
             Ahora que tenemos el camino provisional podemos seguirlo hasta llegar al final. Este camino resultante
             lo guardaremos en caminoFinal.
             '''
-            x, y = inicioCaminoX, inicioCaminoY
-            while not self.laberinto[x][y].visitada:
-                direccion = caminoProvisional[x][y]
-                caminoFinal.append((x, y, direccion))
-                x, y = x + valorDir[direccion][0], y + valorDir[direccion][1]
+            fila, columna = inicioCaminoFila, inicioCaminoColumna
+            while not self.laberinto[fila][columna].visitada:
+                direccion = caminoProvisional[fila][columna]
+                caminoFinal.append((fila, columna, direccion))
+                fila, columna = fila + valorDir[direccion][0], columna + valorDir[direccion][1]
             '''
             Ya tenemos el camino final guardado en caminoFinal. Sólo falta poner en visitadas todas las celdas
             por las que pase este camino y cambiar el vecino de cada una a True según la dirección que tome.
             '''
             for c in caminoFinal:
-                x, y, d = c[0], c[1], c[2]
+                fila, columna, d = c[0], c[1], c[2]
                 if d == "N":
-                    self.laberinto[x][y].norte = True
-                    self.laberinto[x][y+1].sur = True
+                    self.laberinto[fila][columna].norte = True
+                    self.laberinto[fila+1][columna].sur = True
                 elif d == "E":
-                    self.laberinto[x][y].este = True
-                    self.laberinto[x+1][y].oeste = True 
+                    self.laberinto[fila][columna].este = True
+                    self.laberinto[fila][columna+1].oeste = True 
                 elif d == "S":
-                    self.laberinto[x][y].sur = True
-                    self.laberinto[x][y-1].norte = True
+                    self.laberinto[fila][columna].sur = True
+                    self.laberinto[fila-1][columna].norte = True
                 elif d == "O":
-                    self.laberinto[x][y].oeste = True
-                    self.laberinto[x-1][y].este = True                
-                self.laberinto[x][y].visitada = True
+                    self.laberinto[fila][columna].oeste = True
+                    self.laberinto[fila][columna-1].este = True                
+                self.laberinto[fila][columna].visitada = True
                 numNoVisitadas -= 1
         return self.laberinto
 
@@ -149,7 +147,7 @@ class Laberinto():
         diccionarioJSON["rows"] = self.filas
         diccionarioJSON["cols"] = self.columnas
         diccionarioJSON["max_n"] = 4
-        diccionarioJSON["mov"] = [[-1,0],[0,1],[1,0],[0,-1]]
+        diccionarioJSON["mov"] = [[1,0],[0,1],[-1,0],[0,-1]]
         diccionarioJSON["id_mov"] = ["N","E","S","O"]
 
         cells = dict()
@@ -159,8 +157,8 @@ class Laberinto():
                 diccionarioCoordenadaCelda = dict()
                 diccionarioCoordenadaCelda["value"] = 0
                 
-                diccionarioCoordenadaCelda["neighbors"] = [self.laberinto[i][j].norte, self.laberinto[i][j].este, 
-                self.laberinto[i][j].sur, self.laberinto[i][j].oeste]
+                diccionarioCoordenadaCelda["neighbors"] = [self.laberinto[i][j].sur, self.laberinto[i][j].este, 
+                self.laberinto[i][j].norte, self.laberinto[i][j].oeste]
                 cells[coordenadaXY] = diccionarioCoordenadaCelda
                 diccionarioJSON["cells"] = cells
         json.dump(diccionarioJSON, open(self.savePath, "w"), indent=3)
