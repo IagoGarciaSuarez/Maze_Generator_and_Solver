@@ -9,6 +9,7 @@ import json
 import numpy
 import matplotlib.pyplot as plt
 from Celda import Celda
+from Direcciones import Direcciones
 
 class Laberinto():
     def __init__(self, jsonFile, path, size = None):        
@@ -51,13 +52,8 @@ class Laberinto():
     Algoritmo para generar el laberinto mediante el algoritmo de Wilson.
     '''
     def wilson(self):
-        direcciones = ["N", "E", "S", "O"]
-        valorDir = {
-            "N" : (1, 0),
-            "E" : (0, 1),
-            "S" : (-1, 0),
-            "O" : (0, -1)
-        }
+        direcciones = Direcciones.direcciones
+        valorDir = Direcciones.valorDir
         '''
         Se crea un array con todas las celdas no visitadas del laberinto, que al principio serán todas.
         '''
