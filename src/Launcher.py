@@ -28,9 +28,11 @@ def menuStart():
                 JSON = True
                 while True:
                     path = input("Introduzca el nombre del archivo json donde se almacena el problema (sin escribir la extensión .json):\n ")
+                    path += '.json'
                     if (os.path.exists(path)):
                         break
                     else:
+                        print(path)
                         print("La ruta del fichero que ha introducido no es válida. Recuerde escribirla sin la extensión .json.")
                 Problema(JSON, path)
                 break

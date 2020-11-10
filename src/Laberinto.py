@@ -48,6 +48,8 @@ class Laberinto():
                 cellPosTuple = eval(cellPos)
                 row, col = cellPosTuple[0], cellPosTuple[1]
                 self.laberinto[row][col] = Celda(numpy.array(self.data_json["cells"][cellPos]["neighbors"], dtype=bool), (row, col))
+
+            self.drawMaze()
     '''
     Algoritmo para generar el laberinto mediante el algoritmo de Wilson.
     '''
@@ -186,3 +188,6 @@ class Laberinto():
                 if not self.laberinto[row][col].oeste:
                     plt.plot([col, col], [row_inv, row_inv+1], color = 'black')
         plt.savefig("Laberinto.png")
+
+    def getCelda (self, celda):
+        return self.laberinto[celda[0]][celda[1]]
