@@ -9,10 +9,7 @@ import json
 import numpy
 import matplotlib.pyplot as plt
 from Celda import Celda
-<<<<<<< HEAD
 from Direcciones import Direcciones
-=======
->>>>>>> b7ecfe4660c2cf8ea2cf4383f7e325689053e553
 
 class Laberinto():
     def __init__(self, jsonFile, path, size = None):        
@@ -41,14 +38,8 @@ class Laberinto():
             for i in range(self.filas):
                 for j in range(self.columnas):
                     self.laberinto[i][j] = Celda((False, False, False, False), (i, j))
-<<<<<<< HEAD
             self.wilson()
             self.saveJson()
-=======
-                    self.celdasNoVisitadas.add(self.laberinto[i][j])
-            self.wilson()
-
->>>>>>> b7ecfe4660c2cf8ea2cf4383f7e325689053e553
         else:
             '''
             Lee el json y le asigna las variables a cada celda para imprimirlo posteriormente.
@@ -57,22 +48,14 @@ class Laberinto():
                 cellPosTuple = eval(cellPos)
                 row, col = cellPosTuple[0], cellPosTuple[1]
                 self.laberinto[row][col] = Celda(numpy.array(self.data_json["cells"][cellPos]["neighbors"], dtype=bool), (row, col))
+
+            self.drawMaze()
     '''
     Algoritmo para generar el laberinto mediante el algoritmo de Wilson.
     '''
     def wilson(self):
-<<<<<<< HEAD
         direcciones = Direcciones.direcciones
         valorDir = Direcciones.valorDir
-=======
-        direcciones = ["N", "E", "S", "O"]
-        valorDir = {
-            "N" : (0, 1),
-            "E" : (1, 0),
-            "S" : (0, -1),
-            "O" : (-1, 0)
-        }
->>>>>>> b7ecfe4660c2cf8ea2cf4383f7e325689053e553
         '''
         Se crea un array con todas las celdas no visitadas del laberinto, que al principio serán todas.
         '''
@@ -88,7 +71,6 @@ class Laberinto():
         celdaInicio = random.choice(celdasNoVisitadas)
         celdaInicio.visitada = True
         celdasNoVisitadas.remove(celdaInicio)
-        print(celdaInicio)
         '''
         Ahora que tenemos la primera celda hecha, tenemos que encontrar otra celda aleatoria para poder unirlas y crear
         así el camino. Este proceso se repetirá en bucle hasta que no haya más celdas en celdasNoVisitadas.
@@ -106,13 +88,8 @@ class Laberinto():
             caminoFinal = []
             caminoProvisional = [[None for i in range(self.columnas)] for j in range(self.filas)]
             celdaInicioCamino = random.choice(celdasNoVisitadas)
-<<<<<<< HEAD
             inicioCaminoFila, inicioCaminoColumna = celdaInicioCamino.posicion[0], celdaInicioCamino.posicion[1]
             celdaActualFila, celdaActualColumna = inicioCaminoFila, inicioCaminoColumna
-=======
-            inicioCaminoX, inicioCaminoY = celdaInicioCamino.posicion[0], celdaInicioCamino.posicion[1]
-            celdaActualX, celdaActualY = inicioCaminoX, inicioCaminoY
->>>>>>> b7ecfe4660c2cf8ea2cf4383f7e325689053e553
             caminoEncontrado = False
 
             while not caminoEncontrado:
@@ -121,53 +98,31 @@ class Laberinto():
                 de los límites y si es el caso, será válida.
                 '''
                 direccion = random.choice(direcciones)
-<<<<<<< HEAD
                 destinoFila, destinoColumna = celdaActualFila + valorDir[direccion][0], celdaActualColumna + valorDir[direccion][1]
                 if destinoColumna in range(self.columnas) and destinoFila in range(self.filas):
                     caminoProvisional[celdaActualFila][celdaActualColumna] = direccion
-=======
-                destinoX, destinoY = celdaActualX + valorDir[direccion][0], celdaActualY + valorDir[direccion][1]
-                if destinoX in range(self.columnas) and destinoY in range(self.filas):
-                    caminoProvisional[celdaActualX][celdaActualY] = direccion
->>>>>>> b7ecfe4660c2cf8ea2cf4383f7e325689053e553
                     '''
                     Si la celda destino ya está visitada, habremos unido el punto aleatorio con el camino ya excavado del laberinto.
                     Si no está visitada, la celda destino pasará a ser la celda actual.
                     '''
-<<<<<<< HEAD
                     if self.laberinto[destinoFila][destinoColumna].visitada:
                         caminoEncontrado = True
                     else:
                         celdaActualFila, celdaActualColumna = destinoFila, destinoColumna
-=======
-                    if self.laberinto[destinoX][destinoY].visitada:
-                        caminoEncontrado = True
-                    else:
-                        celdaActualX, celdaActualY = destinoX, destinoY
->>>>>>> b7ecfe4660c2cf8ea2cf4383f7e325689053e553
             '''
             Ahora que tenemos el camino provisional podemos seguirlo hasta llegar al final. Este camino resultante
             lo guardaremos en caminoFinal.
             '''
-<<<<<<< HEAD
             fila, columna = inicioCaminoFila, inicioCaminoColumna
             while not self.laberinto[fila][columna].visitada:
                 direccion = caminoProvisional[fila][columna]
                 caminoFinal.append((fila, columna, direccion))
                 fila, columna = fila + valorDir[direccion][0], columna + valorDir[direccion][1]
-=======
-            x, y = inicioCaminoX, inicioCaminoY
-            while not self.laberinto[x][y].visitada:
-                direccion = caminoProvisional[x][y]
-                caminoFinal.append((x, y, direccion))
-                x, y = x + valorDir[direccion][0], y + valorDir[direccion][1]
->>>>>>> b7ecfe4660c2cf8ea2cf4383f7e325689053e553
             '''
             Ya tenemos el camino final guardado en caminoFinal. Sólo falta poner en visitadas todas las celdas
             por las que pase este camino y cambiar el vecino de cada una a True según la dirección que tome.
             '''
             for c in caminoFinal:
-<<<<<<< HEAD
                 fila, columna, d = c[0], c[1], c[2]
                 if d == "N":
                     self.laberinto[fila][columna].norte = True
@@ -205,53 +160,6 @@ class Laberinto():
                 cells[coordenadaXY] = diccionarioCoordenadaCelda
                 diccionarioJSON["cells"] = cells
         json.dump(diccionarioJSON, open(self.savePath, "w"), indent=3)
-=======
-                x, y, d = c[0], c[1], c[2]
-                if d == "N":
-                    self.laberinto[x][y].Norte = True
-                    self.laberinto[x][y+1].Sur = True
-                elif d == "E":
-                    self.laberinto[x][y].Este = True
-                    self.laberinto[x+1][y].Oeste = True
-                elif d == "S":
-                    self.laberinto[x][y].Sur = True
-                    self.laberinto[x][y-1].Norte = True
-                elif d == "O":
-                    self.laberinto[x][y].Oeste = True
-                    self.laberinto[x-1][y].Este = True
-                
-                self.laberinto[x][y].visitada = True
-                numNoVisitadas -= 1
-                print(caminoFinal)
-
-            path = input("Introduzca el nombre del archivo json donde se almacenará el laberinto:\n ")
-
-            diccionarioJSON = dict()
-            diccionarioJSON["rows"] = self.filas
-            diccionarioJSON["cols"] = self.columnas
-            diccionarioJSON["max_n"] = 4
-            diccionarioJSON["mov"] = [[-1,0],[0,1],[1,0],[0,-1]]
-            diccionarioJSON["id_mov"] = ["N","E","S","O"]
-
-            cells = dict()         
-            for i in range(self.filas):
-                for j in range(self.columnas):
-                    coordenadaXY = "(" + str(i) + ", " + str(j) + ")"
-                    diccionarioCoordenadaCelda = dict()
-                    diccionarioCoordenadaCelda["value"] = 0
-                    celda = self.laberinto[i][j]
-                    diccionarioCoordenadaCelda["neighbors"] = [celda.norte, celda.este, celda.sur, celda.oeste]
-                    cells[coordenadaXY] = diccionarioCoordenadaCelda
-                    diccionarioJSON["cells"] = cells
-            
-            archivo = open(path, "w")
-            
-            json.dump(diccionarioJSON, archivo, indent=3)
-            
-            archivo.close()
-            
-            return self.laberinto
->>>>>>> b7ecfe4660c2cf8ea2cf4383f7e325689053e553
 
     '''
     Las columnas corresponden al eje X y las filas al eje Y.
@@ -274,17 +182,12 @@ class Laberinto():
                 if not self.laberinto[row][col].sur:
                     plt.plot([col, col+1], [row_inv, row_inv], color = 'black')
                 if not self.laberinto[row][col].este:
-<<<<<<< HEAD
                     plt.plot([col+1, col+1], [row_inv+1, row_inv], color = 'black')
-=======
-                    plt.plot([col+1, col+1], [row_inv, row_inv+1], color = 'black')
->>>>>>> b7ecfe4660c2cf8ea2cf4383f7e325689053e553
                 if not self.laberinto[row][col].norte:
                     plt.plot([col, col+1], [row_inv+1, row_inv+1], color = 'black')
                 if not self.laberinto[row][col].oeste:
                     plt.plot([col, col], [row_inv, row_inv+1], color = 'black')
-<<<<<<< HEAD
         plt.savefig("Laberinto.png")
-=======
-        plt.show()
->>>>>>> b7ecfe4660c2cf8ea2cf4383f7e325689053e553
+
+    def getCelda (self, celda):
+        return self.laberinto[celda[0]][celda[1]]
