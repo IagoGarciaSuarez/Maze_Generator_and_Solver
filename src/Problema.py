@@ -3,6 +3,8 @@ from Sucesores import Sucesores
 from Estado import Estado
 
 import json
+import random
+import os
 
 class Problema():
     def __init__(self, JSON, path, size = None):
@@ -24,11 +26,33 @@ class Problema():
             self.start = (0, 0)
             self.objective = (size[0]-1, size[1]-1)
             self.saveJSON()
-            
-            self.sucesores = Sucesores()
+        
+            #self.sucesores = Sucesores()
 
+            #IDNodo = 0
+        
             self.pathSuc = path + '.txt'
-            self.saveSucTxt()
+
+            archivo = open(self.pathSuc, 'w')
+
+            for i in range(10):
+        
+                fila = random.randint(0, self.laberinto.filas - 1)
+                columna = random.randint(0, self.laberinto.columnas - 1)
+                nodo = Estado(self.laberinto.getCelda((fila, columna)))
+
+                #nodoFrontera = Nodo(IDNodo, 0, nodo, 0 , 0, 0, 0)
+                #IDNodo = IDNodo + 1
+                #frontera = Frontera()
+                #frontera.insertar_nodo(nodoFrontera)
+                
+                suc = Sucesores()
+                listaSucesores = suc.sucesores(nodo, self.laberinto)
+                archivo.write('SUC((' + str(fila) + ',' + str(columna) + '))=')
+                archivo.write(str(listaSucesores))
+                archivo.write('\n')
+                    
+            archivo.close()
 
     def objetivo(self, id):
         return id == self.objective
@@ -39,19 +63,3 @@ class Problema():
         diccionarioJSON["OBJECTIVE"] = self.objective
         diccionarioJSON["MAZE"] = self.pathMaze
         json.dump(diccionarioJSON, open(self.pathProb, "w"), indent=3)
-
-    def saveSucTxt(self):
-
-        suclistP = []
-        costo = 1
-        suclistP.append(("N",(1,0),costo))
-        suclistP.append(("O",(2,0),costo))
-        suclistP.append(("E",(3,0),costo))
-        suclistP.append(("S",(4,0),costo))
-
-        archivo = open(self.pathSuc, 'w')
-
-        for i in suclistP:
-            archivo.write(str(i) + '\n') 
-
-        archivo.close()
