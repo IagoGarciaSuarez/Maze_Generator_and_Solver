@@ -37,7 +37,7 @@ class Laberinto():
             '''
             for i in range(self.filas):
                 for j in range(self.columnas):
-                    self.laberinto[i][j] = Celda((False, False, False, False), (i, j))
+                    self.laberinto[i][j] = Celda((False, False, False, False), (i, j), random.randint(0, 3))
             self.wilson()
             self.saveJson()
         else:
@@ -47,7 +47,8 @@ class Laberinto():
             for cellPos in self.data_json["cells"]:
                 cellPosTuple = eval(cellPos)
                 row, col = cellPosTuple[0], cellPosTuple[1]
-                self.laberinto[row][col] = Celda(numpy.array(self.data_json["cells"][cellPos]["neighbors"], dtype=bool), (row, col))
+                self.laberinto[row][col] = Celda(numpy.array(self.data_json["cells"][cellPos]["neighbors"], dtype=bool), \
+                    (row, col), numpy.array(self.data_json["cells"][cellPos]["value"], dtype=int))
 
             self.drawMaze()
     '''

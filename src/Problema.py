@@ -1,6 +1,8 @@
 from Laberinto import Laberinto
 from Sucesores import Sucesores
 from Estado import Estado
+from Frontera import Frontera
+from Nodo import Nodo
 
 import json
 
@@ -10,22 +12,25 @@ class Problema():
         Hay un error en los problemas dados en donde indica la celda objetivo. Está escrito como "OBJETIVE" cuando debería
         estar escrito como "OBJECTIVE".
         '''
+        self.pathProb = path + '.json'
         if JSON:
             self.problem_data = json.load(open(path))
             self.laberinto = Laberinto(True, self.problem_data["MAZE"])
             self.start = eval(self.problem_data["INITIAL"])
-            self.estado = Estado(self.laberinto.getCelda(self.start))
             self.objective = eval(self.problem_data["OBJETIVE"])
         else:
             self.pathMaze = path + '_maze.json'
+            self.pathSuc = path + '.txt'
             self.laberinto = Laberinto(False, self.pathMaze, size)
             self.start = (0, 0)
             self.objective = (size[0]-1, size[1]-1)
+            self.saveJSON()
         
+        self.estado = Estado(self.laberinto.getCelda(self.start))
         self.sucesores = Sucesores()
 
-    def objetivo(self, id):
-        return id == self.objective
+    def es_objetivo(self, id):
+        return id == self.objective 
     
     def saveJSON(self):
         diccionarioJSON = dict()
@@ -33,3 +38,58 @@ class Problema():
         diccionarioJSON["OBJECTIVE"] = self.objective
         diccionarioJSON["MAZE"] = self.pathMaze
         json.dump(diccionarioJSON, open(self.pathProb, "w"), indent=3)
+    
+    def print_solucion(self, n): 
+        ''' 
+        Función encargado de imprimir la lista de nodos que llevan a la solución. El formato será:
+        [id][cost,state,father_id,action,depth,h,value]
+        '''
+        nodos = []
+        while n.padre != None:
+            nodos.append(n)
+            n = n.padre
+        nodos.append(n)
+        nodos.reverse()
+        for n in nodos:
+            print("[{}][{}, {}, {}, {}, {}, {}, {}]".format(n.id, n.costo, n.estado, n.padre, n.accion, n.p, round(n.h,2), round(n.f,2)))
+
+    def calcularHeuristica(self):
+        h = abs(self.estado.celda.posicion[0] - self.objective[0]) + abs(self.estado.celda.posicion[1] + self.objective[1])
+        return h
+
+    def busqueda_acotada(self, estrategia, prof_max=1000000):
+        '''
+        Función encargada de encontrar la solución dada una estrategia.
+        '''
+        frontera = Frontera()
+        lista_visitados = set()
+        solucion = False
+        
+        '''
+        Creamos el nodo inicial, cuyo estado va a ser la celda inicial del laberinto.
+        '''
+        n_inicial = Nodo(frontera.next_id, 0, self.estado, None, 'None', 0, 0, self.objective)
+        n_inicial.f = n_inicial.calcular_f(estrategia, n_inicial)
+        frontera.insertar_nodo(n_inicial)
+        frontera.next_id += 1
+
+        while not solucion and not frontera.esta_vacia():
+            n_actual = frontera.seleccionar_nodo()[2]
+            lista_visitados.add(n_actual.state.id)
+
+            if self.es_objetivo(n_actual.state):
+                self.print_solucion(n_actual)
+                solucion = True
+                
+            else:
+                l_suc = self.espacio.sucesores(n_actual)
+                l_nod = n_actual.crearListaNodosSuc(frontera, l_suc, n_actual, prof_max, estrategia)
+
+                if l_nod != None:
+                    for n in l_nod:
+                        # Comprobamos si el estado del nodo n ya ha sido visistado
+                        if n.estado.id not in lista_visitados:
+                            frontera.insertar_nodo(n)
+        
+        if solucion == False:
+            print('No se ha encontrado ninguna solución')
