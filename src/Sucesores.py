@@ -4,31 +4,35 @@ from Estado import Estado
 class Sucesores():
     def sucesores(self, nodo, laberinto, costo = 1):
         sucList = []
-        cell = nodo.celda
+        cell = nodo.estado.celda
         f, c = cell.posicion[0], cell.posicion[1]
         if cell.norte:
             vDir = Direcciones.valorDir["N"]
-            f += vDir[0]
-            c += vDir[1]
-            vecino_N = laberinto.getCelda((f,c))
-            sucList.append(("N", vecino_N, costo))
+            fN = f + vDir[0]
+            cN = c + vDir[1]
+            vecino_N = laberinto.getCelda((fN,cN))
+            sucList.append(("N", vecino_N, vecino_N.value + costo))
+
         if cell.este:
             vDir = Direcciones.valorDir["E"]
-            f += vDir[0]
-            c += vDir[1]
-            vecino_E = laberinto.getCelda((f,c))
-            sucList.append(("E", vecino_E, costo))
+            fE = f + vDir[0]
+            cE = c + vDir[1]
+            vecino_E = laberinto.getCelda((fE,cE))
+            sucList.append(("E", vecino_E, vecino_E.value + costo))
+
         if cell.sur:
             vDir = Direcciones.valorDir["S"]
-            f += vDir[0]
-            c += vDir[1]
-            vecino_S = laberinto.getCelda((f,c))
-            sucList.append(("S", vecino_S, costo))
+            fS = f + vDir[0]
+            cS = c + vDir[1]
+            vecino_S = laberinto.getCelda((fS,cS))
+            sucList.append(("S", vecino_S, vecino_S.value + costo))
+
         if cell.oeste:
             vDir = Direcciones.valorDir["O"]
-            f += vDir[0]
-            c += vDir[1]
-            vecino_O = laberinto.getCelda((f,c))
-            sucList.append(("O", vecino_O, costo))
+            fO = f + vDir[0]
+            cO = f + vDir[1]
+            vecino_O = laberinto.getCelda((fO,cO))
+            sucList.append(("O", vecino_O, vecino_O.value + costo))
+
         return sucList
     

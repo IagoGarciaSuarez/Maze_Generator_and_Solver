@@ -42,16 +42,16 @@ class Problema():
     def print_solucion(self, n): 
         ''' 
         Función encargado de imprimir la lista de nodos que llevan a la solución. El formato será:
-        [id][cost,state,father_id,action,depth,h,value]
+        [id][costo, estado, id_padre, accion, profundidad, h, value]
         '''
         nodos = []
         while n.padre != None:
             nodos.append(n)
             n = n.padre
-        nodos.append(n)
+        print("[{}][{}, {}, {}, {}, {}, {}, {}]".format(n.id, n.costo, n.estado, n.padre, n.accion, n.p, round(n.h,2), round(n.f,2)))
         nodos.reverse()
         for n in nodos:
-            print("[{}][{}, {}, {}, {}, {}, {}, {}]".format(n.id, n.costo, n.estado, n.padre, n.accion, n.p, round(n.h,2), round(n.f,2)))
+            print("[{}][{}, {}, {}, {}, {}, {}, {}]".format(n.id, n.costo, n.estado, n.padre.estado.id, n.accion, n.p, round(n.h,2), round(n.f,2)))
 
     def calcularHeuristica(self):
         h = abs(self.estado.celda.posicion[0] - self.objective[0]) + abs(self.estado.celda.posicion[1] + self.objective[1])
@@ -62,34 +62,33 @@ class Problema():
         Función encargada de encontrar la solución dada una estrategia.
         '''
         frontera = Frontera()
-        lista_visitados = set()
+        lista_visitados = []
         solucion = False
         
         '''
         Creamos el nodo inicial, cuyo estado va a ser la celda inicial del laberinto.
         '''
         n_inicial = Nodo(frontera.next_id, 0, self.estado, None, 'None', 0, 0, self.objective)
-        n_inicial.f = n_inicial.calcular_f(estrategia, n_inicial)
+        n_inicial.f = n_inicial.calcularValor(estrategia, n_inicial)
         frontera.insertar_nodo(n_inicial)
         frontera.next_id += 1
 
         while not solucion and not frontera.esta_vacia():
             n_actual = frontera.seleccionar_nodo()[2]
-            lista_visitados.add(n_actual.state.id)
+            print('selected: ', n_actual.estado)
+            lista_visitados.append(n_actual.estado)
 
-            if self.es_objetivo(n_actual.state):
+            if self.es_objetivo(n_actual.estado.id):
                 self.print_solucion(n_actual)
                 solucion = True
                 
             else:
-                l_suc = self.espacio.sucesores(n_actual)
+                l_suc = self.sucesores.sucesores(n_actual, self.laberinto)
                 l_nod = n_actual.crearListaNodosSuc(frontera, l_suc, n_actual, prof_max, estrategia)
-
                 if l_nod != None:
                     for n in l_nod:
-                        # Comprobamos si el estado del nodo n ya ha sido visistado
-                        if n.estado.id not in lista_visitados:
+                        if n.estado not in lista_visitados:
                             frontera.insertar_nodo(n)
         
         if solucion == False:
-            print('No se ha encontrado ninguna solución')
+            print('No se ha encontrado ninguna solución.\n')
