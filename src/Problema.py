@@ -57,14 +57,14 @@ class Problema():
         h = abs(self.estado.celda.posicion[0] - self.objective[0]) + abs(self.estado.celda.posicion[1] + self.objective[1])
         return h
 
-    def busqueda_acotada(self, estrategia, prof_max=1000000):
+    def busqueda_acotada(self, estrategia, prof_max=5):
         '''
         Función encargada de encontrar la solución dada una estrategia.
         '''
         frontera = Frontera()
         lista_visitados = []
         solucion = False
-        
+        test = None
         '''
         Creamos el nodo inicial, cuyo estado va a ser la celda inicial del laberinto.
         '''
@@ -75,20 +75,18 @@ class Problema():
 
         while not solucion and not frontera.esta_vacia():
             n_actual = frontera.seleccionar_nodo()[2]
-            print('selected: ', n_actual.estado)
-            lista_visitados.append(n_actual.estado)
 
             if self.es_objetivo(n_actual.estado.id):
                 self.print_solucion(n_actual)
                 solucion = True
                 
-            else:
+            elif n_actual.estado.id not in lista_visitados:
+                lista_visitados.append(n_actual.estado.id)
                 l_suc = self.sucesores.sucesores(n_actual, self.laberinto)
                 l_nod = n_actual.crearListaNodosSuc(frontera, l_suc, n_actual, prof_max, estrategia)
                 if l_nod != None:
                     for n in l_nod:
-                        if n.estado not in lista_visitados:
-                            frontera.insertar_nodo(n)
+                        frontera.insertar_nodo(n)
         
         if solucion == False:
             print('No se ha encontrado ninguna solución.\n')

@@ -25,7 +25,7 @@ class Nodo:
         return listaSuc
     
     def calcularHeuristica(self, objetivo):
-        h = abs(self.estado.celda.posicion[0] - objetivo[0]) + abs(self.estado.celda.posicion[1] + objetivo[1])
+        h = abs(self.estado.celda.posicion[0] - objetivo[0]) + abs(self.estado.celda.posicion[1] - objetivo[1])
         return h
 
     def calcularValor(self, estrategia, n):
