@@ -37,7 +37,7 @@ class Nodo:
         elif estrategia == 2:
             return 1/(n.p + 1)
         elif estrategia == 3:
-            return n.coste
+            return n.costo
         elif estrategia == 4:
             return n.h
         elif estrategia == 5:

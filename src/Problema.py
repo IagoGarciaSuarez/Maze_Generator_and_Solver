@@ -75,6 +75,7 @@ class Problema():
 
         while not solucion and not frontera.esta_vacia():
             n_actual = frontera.seleccionar_nodo()[2]
+            print('select: ', n_actual.estado)
 
             if self.es_objetivo(n_actual.estado.id):
                 self.print_solucion(n_actual)
@@ -87,6 +88,9 @@ class Problema():
                 if l_nod != None:
                     for n in l_nod:
                         frontera.insertar_nodo(n)
+                for f in frontera.frontera:
+                    print('Frontera: {}, id: {}, cost: {}, h: {}, f: {}, dad: {}'.format(f[2].estado, f[2].id, f[2].costo, f[2].h, f[2].f, f[2].padre.estado))
+                print('--------------')
         
         if solucion == False:
             print('No se ha encontrado ninguna solución.\n')

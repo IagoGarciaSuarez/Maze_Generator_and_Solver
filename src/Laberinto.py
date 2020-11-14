@@ -188,6 +188,14 @@ class Laberinto():
                     plt.plot([col, col+1], [row_inv+1, row_inv+1], color = 'black')
                 if not self.laberinto[row][col].oeste:
                     plt.plot([col, col], [row_inv, row_inv+1], color = 'black')
+                '''
+                PARA COLOREAR LAS CASILLAS'
+                color = self.laberinto[row][col].value
+                if color == 0: Colorear de blanco (no colorear)
+                elif color == 1: Colorear de marrón
+                elif color == 2: Colorear de verde
+                elif color == 3: Colorear de azul
+                '''
         plt.savefig("Laberinto.png")
 
     def getCelda (self, celda):
