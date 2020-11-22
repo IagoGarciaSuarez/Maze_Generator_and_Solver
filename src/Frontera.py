@@ -25,3 +25,5 @@ class Frontera:
     def esta_vacia(self):
         ''' Función que indicará si la frontera está o no vacía '''
         return True if len(self.frontera) == 0 else False
+
+    
