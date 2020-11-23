@@ -37,7 +37,7 @@ class Laberinto():
             '''
             for i in range(self.filas):
                 for j in range(self.columnas):
-                    self.laberinto[i][j] = Celda((False, False, False, False), (i, j))
+                    self.laberinto[i][j] = Celda((False, False, False, False), (i, j), random.randint(0, 3))
             self.wilson()
             self.saveJson()
         else:
@@ -47,7 +47,8 @@ class Laberinto():
             for cellPos in self.data_json["cells"]:
                 cellPosTuple = eval(cellPos)
                 row, col = cellPosTuple[0], cellPosTuple[1]
-                self.laberinto[row][col] = Celda(numpy.array(self.data_json["cells"][cellPos]["neighbors"], dtype=bool), (row, col))
+                self.laberinto[row][col] = Celda(numpy.array(self.data_json["cells"][cellPos]["neighbors"], dtype=bool), \
+                    (row, col), numpy.array(self.data_json["cells"][cellPos]["value"], dtype=int))
 
             self.drawMaze()
     '''
@@ -159,7 +160,7 @@ class Laberinto():
                 self.laberinto[i][j].norte, self.laberinto[i][j].oeste]
                 cells[coordenadaXY] = diccionarioCoordenadaCelda
                 diccionarioJSON["cells"] = cells
-        json.dump(diccionarioJSON, open(self.savePath, "w"), indent=3)
+        json.dump(diccionarioJSON, open("problema_" + str(self.filas) + "x" + str(self.columnas) + "_maze.json" , "w"), indent=3)
 
     '''
     Las columnas corresponden al eje X y las filas al eje Y.
@@ -187,7 +188,15 @@ class Laberinto():
                     plt.plot([col, col+1], [row_inv+1, row_inv+1], color = 'black')
                 if not self.laberinto[row][col].oeste:
                     plt.plot([col, col], [row_inv, row_inv+1], color = 'black')
-        plt.savefig("Laberinto.png")
+                '''
+                PARA COLOREAR LAS CASILLAS'
+                color = self.laberinto[row][col].value
+                if color == 0: Colorear de blanco (no colorear)
+                elif color == 1: Colorear de marrón
+                elif color == 2: Colorear de verde
+                elif color == 3: Colorear de azul
+                '''
+        plt.savefig("puzzle_loop_" + str(self.filas) + "x" + str(self.columnas) + ".png")
 
     def getCelda (self, celda):
         return self.laberinto[celda[0]][celda[1]]
