@@ -54,7 +54,7 @@ class Problema():
         archivo = open("solution_" + str(filas) + "x" + str(columnas) + "_" + str(strategia) + ".txt",  'w')
 
         for n in nodos:
-            archivo.write("[" + n.id + "][" + n.costo + "," + n.estado + "," + n.padre.estado.id + "," + n.accion + "," + n.p + "," + str(round(n.h.2)) + "," + str(round(n.f,2)) + "]")        
+            archivo.write("[" + n.id + "][" + n.costo + "," + n.estado + "," + n.padre.estado.id + "," + n.accion + "," + n.p + "," + str(round(n.h,2)) + "," + str(round(n.f,2)) + "]")        
         
         archivo.close()
 
