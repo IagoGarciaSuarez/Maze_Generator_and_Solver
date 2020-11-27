@@ -25,6 +25,7 @@ class Problema():
             self.start = (0, 0)
             self.objective = (size[0]-1, size[1]-1)
             self.saveJSON()
+            self.laberinto.drawMaze()
         
         self.estado = Estado(self.laberinto.getCelda(self.start))
         self.sucesores = Sucesores()

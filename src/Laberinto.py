@@ -127,13 +127,13 @@ class Laberinto():
                 fila, columna, d = c[0], c[1], c[2]
                 if d == "N":
                     self.laberinto[fila][columna].norte = True
-                    self.laberinto[fila+1][columna].sur = True
+                    self.laberinto[fila-1][columna].sur = True
                 elif d == "E":
                     self.laberinto[fila][columna].este = True
                     self.laberinto[fila][columna+1].oeste = True 
                 elif d == "S":
                     self.laberinto[fila][columna].sur = True
-                    self.laberinto[fila-1][columna].norte = True
+                    self.laberinto[fila+1][columna].norte = True
                 elif d == "O":
                     self.laberinto[fila][columna].oeste = True
                     self.laberinto[fila][columna-1].este = True                
@@ -209,7 +209,6 @@ class Laberinto():
 
         plt.axis("scaled")
         plt.savefig("laberinto.png")
-        plt.show()
 
     def getCelda (self, celda):
         return self.laberinto[celda[0]][celda[1]]
