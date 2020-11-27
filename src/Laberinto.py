@@ -172,31 +172,44 @@ class Laberinto():
         plt.figure(figsize = (self.columnas, self.filas))
         plt.xticks([])
         plt.yticks()
-        plt.plot([0, self.columnas], [0, 0], color='black', linewidth=2)
-        plt.plot([0, 0], [0, self.filas], color='black', linewidth=2)
-        plt.plot([0, self.columnas], [self.filas, self.filas], color='black', linewidth=2)
-        plt.plot([self.columnas, self.columnas], [self.filas, 0], color='black', linewidth=2)
+        plt.plot([0, self.columnas], [0, 0], color='black', linewidth=4)
+        plt.plot([0, 0], [0, self.filas], color='black', linewidth=4)
+        plt.plot([0, self.columnas], [self.filas, self.filas], color='black', linewidth=4)
+        plt.plot([self.columnas, self.columnas], [self.filas, 0], color='black', linewidth=4)
+        
+        ax = plt.gca()
 
         for col in range(self.columnas):
             for row in range(self.filas):
                 row_inv = self.filas - row - 1
+
+    ############LINEAS################################################
                 if not self.laberinto[row][col].sur:
-                    plt.plot([col, col+1], [row_inv, row_inv], color = 'black')
+                    plt.plot([col, col+1], [row_inv, row_inv], color = 'black',linewidth=3)
                 if not self.laberinto[row][col].este:
-                    plt.plot([col+1, col+1], [row_inv+1, row_inv], color = 'black')
+                    plt.plot([col+1, col+1], [row_inv+1, row_inv], color = 'black',linewidth=3)
                 if not self.laberinto[row][col].norte:
-                    plt.plot([col, col+1], [row_inv+1, row_inv+1], color = 'black')
+                    plt.plot([col, col+1], [row_inv+1, row_inv+1], color = 'black',linewidth=3)
                 if not self.laberinto[row][col].oeste:
-                    plt.plot([col, col], [row_inv, row_inv+1], color = 'black')
-                '''
-                PARA COLOREAR LAS CASILLAS'
-                color = self.laberinto[row][col].value
-                if color == 0: Colorear de blanco (no colorear)
-                elif color == 1: Colorear de marrón
-                elif color == 2: Colorear de verde
-                elif color == 3: Colorear de azul
-                '''
-        plt.savefig("Laberinto.png")
+                    plt.plot([col, col], [row_inv, row_inv+1], color = 'black',linewidth=3)
+
+    #########COLORES##################################################
+                if self.laberinto[row][col].value == 0:
+                    rectangle = plt.Rectangle((col,row_inv),width=1,height=1,facecolor="white")
+                    ax.add_patch(rectangle)
+                if self.laberinto[row][col].value == 1:
+                    rectangle = plt.Rectangle((col,row_inv),width=1,height=1,facecolor="brown")
+                    ax.add_patch(rectangle)
+                if self.laberinto[row][col].value == 2:
+                    rectangle = plt.Rectangle((col,row_inv),width=1,height=1,facecolor="green")
+                    ax.add_patch(rectangle)
+                if self.laberinto[row][col].value == 3:
+                    rectangle = plt.Rectangle((col,row_inv),width=1,height=1,facecolor="blue")
+                    ax.add_patch(rectangle)
+
+        plt.axis("scaled")
+        plt.savefig("laberinto.png")
+        plt.show()
 
     def getCelda (self, celda):
         return self.laberinto[celda[0]][celda[1]]
