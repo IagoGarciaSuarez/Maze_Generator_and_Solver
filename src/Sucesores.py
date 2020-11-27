@@ -30,7 +30,7 @@ class Sucesores():
         if cell.oeste:
             vDir = Direcciones.valorDir["O"]
             fO = f + vDir[0]
-            cO = f + vDir[1]
+            cO = c + vDir[1]
             vecino_O = laberinto.getCelda((fO,cO))
             sucList.append(("O", vecino_O, vecino_O.value + costo))
 

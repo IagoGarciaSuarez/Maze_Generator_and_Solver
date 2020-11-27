@@ -16,7 +16,7 @@ class Frontera:
         Función que introducirá en un nodo en la frontera usando una Priority Queue, ordenada primeramente en función del
         valor de la f del nodo, y después por el id del nodo
         '''
-        heappush(self.frontera, (nodo.f, nodo.id, nodo))
+        heappush(self.frontera, (nodo.f, nodo.estado.celda.posicion[0], nodo.estado.celda.posicion[1], nodo.id, nodo))
 
     def seleccionar_nodo(self):
         ''' Función que sacará y retornará el primer elemento de la frontera '''

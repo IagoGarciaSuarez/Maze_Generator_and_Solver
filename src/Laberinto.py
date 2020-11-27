@@ -208,7 +208,7 @@ class Laberinto():
                     ax.add_patch(rectangle)
 
         plt.axis("scaled")
-        plt.savefig("laberinto.png")
+        plt.savefig("Problemas_Generados/laberinto.png")
 
     def getCelda (self, celda):
         return self.laberinto[celda[0]][celda[1]]

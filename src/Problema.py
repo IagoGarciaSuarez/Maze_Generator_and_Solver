@@ -15,7 +15,7 @@ class Problema():
         self.pathProb = path + '.json'
         if JSON:
             self.problem_data = json.load(open(path))
-            self.laberinto = Laberinto(True, self.problem_data["MAZE"])
+            self.laberinto = Laberinto(True, 'Ejemplos_resueltos/' + self.problem_data["MAZE"])
             self.start = eval(self.problem_data["INITIAL"])
             self.objective = eval(self.problem_data["OBJETIVE"])
         else:
@@ -25,7 +25,6 @@ class Problema():
             self.start = (0, 0)
             self.objective = (size[0]-1, size[1]-1)
             self.saveJSON()
-            self.laberinto.drawMaze()
         
         self.estado = Estado(self.laberinto.getCelda(self.start))
         self.sucesores = Sucesores()
@@ -75,8 +74,7 @@ class Problema():
         frontera.next_id += 1
 
         while not solucion and not frontera.esta_vacia():
-            n_actual = frontera.seleccionar_nodo()[2]
-            print('select: ', n_actual.estado)
+            n_actual = frontera.seleccionar_nodo()[4]
 
             if self.es_objetivo(n_actual.estado.id):
                 self.print_solucion(n_actual)
@@ -89,9 +87,6 @@ class Problema():
                 if l_nod != None:
                     for n in l_nod:
                         frontera.insertar_nodo(n)
-                for f in frontera.frontera:
-                    print('Frontera: {}, id: {}, cost: {}, h: {}, f: {}, dad: {}'.format(f[2].estado, f[2].id, f[2].costo, f[2].h, f[2].f, f[2].padre.estado))
-                print('--------------')
         
         if solucion == False:
             print('No se ha encontrado ninguna solución.\n')

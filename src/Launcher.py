@@ -30,7 +30,7 @@ def selectProblem():
     JSON = True
     while True:
         path = input("Introduzca el nombre del archivo json donde se almacena el problema (sin escribir la extensión .json):\n ")
-        path += '.json'
+        path = 'Ejemplos_resueltos/' + path + '.json'
         if (os.path.exists(path)):
             break
         else:
@@ -41,6 +41,7 @@ def selectProblem():
 def createProblem():
     JSON = False
     path = input("Introduzca el nombre del archivo json donde se almacenará el problema (sin escribir la extensión .json):\n ")
+    path = 'Problemas_Generados/' + path
     SIZE = (int(input('Introduzca el número de filas: ')), int(input('Introduzca el número de columnas: ')))
     p = Problema(JSON, path, SIZE)
     return p
