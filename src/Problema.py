@@ -16,7 +16,7 @@ class Problema():
         self.pathProb = path + '.json'
         if JSON:
             self.problem_data = json.load(open(path))
-            self.laberinto = Laberinto(True, self.problem_data["MAZE"])
+            self.laberinto = Laberinto(True, 'Ejemplos_resueltos/' + self.problem_data["MAZE"])
             self.start = eval(self.problem_data["INITIAL"])
             self.objective = eval(self.problem_data["OBJETIVE"])
         else:
@@ -40,24 +40,47 @@ class Problema():
         diccionarioJSON["MAZE"] = self.pathMaze
         json.dump(diccionarioJSON, open(self.pathProb, "w"), indent=3)
 
-        
-    def saveTxt(self, nodo, estrategia):
+    def saveTxt(self, nodo, estrat):
         
         nodos = []
+        
         while nodo.padre != None:
+            
             nodos.append(nodo)
             nodo = nodo.padre
         
         nodos.reverse()
-        filas = self.objective[0]
-        columnas = self.objective[1]
-        archivo = open("solution_" + str(filas) + "x" + str(columnas) + "_" + str(strategia) + ".txt",  'w')
 
+        filas = self.objective[0] + 1
+        columnas = self.objective[1] + 1
+
+        if(estrat == 1):
+        
+            estrategia = 'BREADTH'
+        
+        elif(estrat == 2):
+
+            estrategia = 'DEPTH'
+
+        elif(estrat == 3):
+
+            estrategia = 'UNIFORM'
+
+        elif(estrat == 4):
+
+            estrategia = 'GREEDY'
+
+        else:
+
+            estrategia = 'A'
+        
+        archivo = open("Problemas_Generados/solution_" + str(filas) + "X" + str(columnas) + "_" + estrategia + ".txt", 'w')
+        
         for n in nodos:
-            archivo.write("[" + n.id + "][" + n.costo + "," + n.estado + "," + n.padre.estado.id + "," + n.accion + "," + n.p + "," + str(round(n.h,2)) + "," + str(round(n.f,2)) + "]")        
+            archivo.write("[" + str(n.id) + "]" + "[" + str(n.costo) + ", " + str(n.estado) + ", " + 
+            str(n.padre.estado.id) + ", " + str(n.accion) + ", " + str(n.p) + ", " + str(round(n.h,2)) + ", " + str(round(n.f,2)) + "]\n")
         
         archivo.close()
-
 
     def print_solucion(self, n): 
         ''' 
@@ -94,12 +117,11 @@ class Problema():
         frontera.next_id += 1
 
         while not solucion and not frontera.esta_vacia():
-            n_actual = frontera.seleccionar_nodo()[2]
-            print('select: ', n_actual.estado)
+            n_actual = frontera.seleccionar_nodo()[4]
 
             if self.es_objetivo(n_actual.estado.id):
                 self.print_solucion(n_actual)
-                saveTxt(n_actual, estrategia)
+                self.saveTxt(n_actual, estrategia)
                 solucion = True
                 
             elif n_actual.estado.id not in lista_visitados:
@@ -109,9 +131,6 @@ class Problema():
                 if l_nod != None:
                     for n in l_nod:
                         frontera.insertar_nodo(n)
-                for f in frontera.frontera:
-                    print('Frontera: {}, id: {}, cost: {}, h: {}, f: {}, dad: {}'.format(f[2].estado, f[2].id, f[2].costo, f[2].h, f[2].f, f[2].padre.estado))
-                print('--------------')
         
         if solucion == False:
             print('No se ha encontrado ninguna solución.\n')
