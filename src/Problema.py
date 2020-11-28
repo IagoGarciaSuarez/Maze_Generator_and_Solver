@@ -39,6 +39,41 @@ class Problema():
         diccionarioJSON["MAZE"] = self.pathMaze
         json.dump(diccionarioJSON, open(self.pathProb, "w"), indent=3)
     
+    def saveTxt(self, nodo, estrat):
+        nodos = []        
+
+        while nodo.padre != None:
+            nodos.append(nodo)
+            nodo = nodo.padre
+        
+        nodos.reverse()
+
+        filas = self.objective[0] + 1
+        columnas = self.objective[1] + 1
+
+        if(estrat == 1):
+            estrategia = 'BREADTH'
+        
+        elif(estrat == 2):
+            estrategia = 'DEPTH'
+
+        elif(estrat == 3):
+            estrategia = 'UNIFORM'
+
+        elif(estrat == 4):
+            estrategia = 'GREEDY'
+
+        else:
+            estrategia = 'A'
+        
+        archivo = open("Problemas_Generados/solution_" + str(filas) + "X" + str(columnas) + "_" + estrategia + ".txt", 'w')
+        
+        for n in nodos:
+            archivo.write("[" + str(n.id) + "]" + "[" + str(n.costo) + ", " + str(n.estado) + ", " + 
+            str(n.padre.estado.id) + ", " + str(n.accion) + ", " + str(n.p) + ", " + str(round(n.h,2)) + ", " + str(round(n.f,2)) + "]\n")
+        
+        archivo.close()
+    
     def print_solucion(self, n): 
         ''' 
         Función encargado de imprimir la lista de nodos que llevan a la solución. El formato será:
@@ -78,6 +113,7 @@ class Problema():
 
             if self.es_objetivo(n_actual.estado.id):
                 self.print_solucion(n_actual)
+                self.saveTxt(n_actual, estrategia)
                 solucion = True
                 
             elif n_actual.estado.id not in lista_visitados:

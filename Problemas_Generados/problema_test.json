@@ -1,0 +1,11 @@
+{
+   "INITIAL": [
+      0,
+      0
+   ],
+   "OBJECTIVE": [
+      4,
+      6
+   ],
+   "MAZE": "Problemas_Generados/problema_test_maze.json"
+}

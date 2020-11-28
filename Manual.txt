@@ -1,0 +1,7 @@
+Manual de usuario.
+Ejecución: El programa se deberá ejecutar desde el directorio raíz SI_LAB_BC1_7/ a través del archivo Launcher.py, de forma que el comando de ejecución sea "$python3 src/Launcher.py" desde la carpeta indicada. 
+El programa leerá los archivos de ejemplos resueltos desde la carpeta Ejemplos_resueltos/ situada en la raíz. Los archivos que tenga que crear se guardarán en la carpeta Problemas_Generados/ también situada en la raíz. 
+A la hora de introducir las opciones, sólo se admitiran los valores numéricos correspondientes a cada una de las opciones. En caso de que esos valores no sean numéricos o no coincidan con una opción existente, se devolverá un error y se pedirá que se introduzca un valor válido.
+Cuando haya que indicar el nombre del archivo, sea el destino para guardar un problema creado o el origen desde el que se leerá el problema, es importante no escribir la extensión, de modo que si queremos leer el archivo "problema_10x10.json" para generar el laberinto y resolverlo a partir de un problema ya creado, deberemos escribir "problema_10x10". Lo mismo ocurre si queremos que nuestro problema creado se guarde en "problema_creado.json" deberemos escribir como nombre del archivo destino "problema_creado".
+Independientemente de si creamos el problema o lo leemos, se generará el laberinto con los colores correspondientes en la carpeta Problemas_Generados/.
+A la hora de crear un problema, como celda inicial se ha indicado de manera estática la (0, 0), y, del mismo modo, la celda final como la de la esquina opuesta.
