@@ -40,9 +40,12 @@ def selectProblem():
 
 def createProblem():
     JSON = False
-    path = input("Introduzca el nombre del archivo json donde se almacenará el problema (sin escribir la extensión .json):\n ")
-    path = 'Problemas_Generados/' + path
+    # path = input("Introduzca el nombre del archivo json donde se almacenará el problema (sin escribir la extensión .json):\n ")
     SIZE = (int(input('Introduzca el número de filas: ')), int(input('Introduzca el número de columnas: ')))
+    
+    filas = SIZE[0]
+    columnas = SIZE[1]
+    path = 'Problemas_Generados/' + 'problema_' + str(filas) + 'x' + str(columnas)
     p = Problema(JSON, path, SIZE)
     return p
 

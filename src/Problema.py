@@ -16,7 +16,7 @@ class Problema():
         self.pathProb = path + '.json'
         if JSON:
             self.problem_data = json.load(open(path))
-            self.laberinto = Laberinto(True, 'Ejemplos_resueltos/' + self.problem_data["MAZE"])
+            self.laberinto = Laberinto(True, 'Problemas_Generados/' + self.problem_data["MAZE"])
             self.start = eval(self.problem_data["INITIAL"])
             self.objective = eval(self.problem_data["OBJETIVE"])
         else:
@@ -74,8 +74,8 @@ class Problema():
 
             estrategia = 'A'
         
-        archivo = open("Problemas_Generados/solution_" + str(filas) + "X" + str(columnas) + "_" + estrategia + ".txt", 'w')
-        
+        archivo = open("Problemas_Generados/sol_" + str(filas) + "x" + str(columnas) + "_" + estrategia + ".txt", 'w')
+        archivo.write("[id][cost,state,father_id,action,depth,h,value]" + "\n")
         for n in nodos:
             archivo.write("[" + str(n.id) + "]" + "[" + str(n.costo) + ", " + str(n.estado) + ", " + 
             str(n.padre.estado.id) + ", " + str(n.accion) + ", " + str(n.p) + ", " + str(round(n.h,2)) + ", " + str(round(n.f,2)) + "]\n")

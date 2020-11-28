@@ -50,7 +50,7 @@ class Laberinto():
                 self.laberinto[row][col] = Celda(numpy.array(self.data_json["cells"][cellPos]["neighbors"], dtype=bool), \
                     (row, col), numpy.array(self.data_json["cells"][cellPos]["value"], dtype=int))
 
-            self.drawMaze()
+        self.drawMaze()
     '''
     Algoritmo para generar el laberinto mediante el algoritmo de Wilson.
     '''
@@ -160,6 +160,7 @@ class Laberinto():
                 self.laberinto[i][j].norte, self.laberinto[i][j].oeste]
                 cells[coordenadaXY] = diccionarioCoordenadaCelda
                 diccionarioJSON["cells"] = cells
+
         json.dump(diccionarioJSON, open(self.savePath, "w"), indent=3)
 
     '''
@@ -208,7 +209,7 @@ class Laberinto():
                     ax.add_patch(rectangle)
 
         plt.axis("scaled")
-        plt.savefig("Problemas_Generados/" + "puzzle_loop" + str(self.filas) + "X" + str(self.columnas) + ".png")
+        plt.savefig("Problemas_Generados/" + "puzzle_loop_" + str(self.filas) + "X" + str(self.columnas) + ".png")
 
     def getCelda (self, celda):
         return self.laberinto[celda[0]][celda[1]]
