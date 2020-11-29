@@ -5,7 +5,6 @@ from Frontera import Frontera
 from Nodo import Nodo
 
 import json
-import os
 
 class Problema():
     def __init__(self, JSON, path, size = None):
@@ -16,7 +15,7 @@ class Problema():
         self.pathProb = path + '.json'
         if JSON:
             self.problem_data = json.load(open(path))
-            self.laberinto = Laberinto(True, 'Problemas_Generados/' + self.problem_data["MAZE"])
+            self.laberinto = Laberinto(True, 'Ejemplos_resueltos/' + self.problem_data["MAZE"])
             self.start = eval(self.problem_data["INITIAL"])
             self.objective = eval(self.problem_data["OBJETIVE"])
         else:
@@ -39,13 +38,11 @@ class Problema():
         diccionarioJSON["OBJECTIVE"] = self.objective
         diccionarioJSON["MAZE"] = self.pathMaze
         json.dump(diccionarioJSON, open(self.pathProb, "w"), indent=3)
-
+    
     def saveTxt(self, nodo, estrat):
-        
-        nodos = []
-        
+        nodos = []        
+
         while nodo.padre != None:
-            
             nodos.append(nodo)
             nodo = nodo.padre
         
@@ -55,33 +52,28 @@ class Problema():
         columnas = self.objective[1] + 1
 
         if(estrat == 1):
-        
             estrategia = 'BREADTH'
         
         elif(estrat == 2):
-
             estrategia = 'DEPTH'
 
         elif(estrat == 3):
-
             estrategia = 'UNIFORM'
 
         elif(estrat == 4):
-
             estrategia = 'GREEDY'
 
         else:
-
             estrategia = 'A'
         
-        archivo = open("Problemas_Generados/sol_" + str(filas) + "x" + str(columnas) + "_" + estrategia + ".txt", 'w')
-        archivo.write("[id][cost,state,father_id,action,depth,h,value]" + "\n")
+        archivo = open("Archivos_Generados/solution_" + str(filas) + "X" + str(columnas) + "_" + estrategia + ".txt", 'w')
+        
         for n in nodos:
             archivo.write("[" + str(n.id) + "]" + "[" + str(n.costo) + ", " + str(n.estado) + ", " + 
             str(n.padre.estado.id) + ", " + str(n.accion) + ", " + str(n.p) + ", " + str(round(n.h,2)) + ", " + str(round(n.f,2)) + "]\n")
         
         archivo.close()
-
+    
     def print_solucion(self, n): 
         ''' 
         Función encargado de imprimir la lista de nodos que llevan a la solución. El formato será:

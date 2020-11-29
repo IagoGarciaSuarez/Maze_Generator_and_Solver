@@ -209,7 +209,7 @@ class Laberinto():
                     ax.add_patch(rectangle)
 
         plt.axis("scaled")
-        plt.savefig("Problemas_Generados/" + "puzzle_loop_" + str(self.filas) + "X" + str(self.columnas) + ".png")
+        plt.savefig("Archivos_Generados/" + "puzzle_loop_" + str(self.filas) + "X" + str(self.columnas) + ".png")
 
     def getCelda (self, celda):
         return self.laberinto[celda[0]][celda[1]]
