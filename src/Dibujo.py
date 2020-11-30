@@ -41,10 +41,10 @@ def dibujar_laberinto(laberinto):
                 ax.add_patch(rectangle)
 
     plt.axis("scaled")
-    plt.savefig("Problemas_Generados/" + "puzzle_loop_" + str(laberinto.filas) + "X" + str(laberinto.columnas) + ".png")
+    plt.savefig("Problemas_Generados/" + "puzzle_loop_" + str(laberinto.filas) + "x" + str(laberinto.columnas) + ".png")
 
 
-def dibujar_solucion(laberinto):
+def dibujar_solucion(laberinto,nodos,frontera,visitados,estrategia):
     '''
     Pensar en como pasar la estrategia y los vectores para frontera y solucion
     '''
@@ -75,13 +75,13 @@ def dibujar_solucion(laberinto):
 #########COLORES##################################################
             if  laberinto.laberinto[row][col].posicion in nodos:
                 rectangle = plt.Rectangle((col,row_inv),width=1,height=1,facecolor="red")
-                ax2.add_patch(rectangle)
-            elif laberinto.laberinto[row][col].posicion in lista_frontera:
+                ax.add_patch(rectangle)
+            elif laberinto.laberinto[row][col].posicion in frontera:
                 rectangle = plt.Rectangle((col,row_inv),width=1,height=1,facecolor="blue")
-                ax2.add_patch(rectangle)
-            else:
+                ax.add_patch(rectangle)
+            elif laberinto.laberinto[row][col].posicion in visitados:
                 rectangle = plt.Rectangle((col,row_inv),width=1,height=1,facecolor="green")
-                ax2.add_patch(rectangle)
+                ax.add_patch(rectangle)
 
     plt.axis("scaled")
-    plt.savefig("Problemas_Generados/" + "solution_" + str(laberinto.filas) + "X" + str(laberinto.columnas) + ".png")
+    plt.savefig("Problemas_Generados/" + "solution_" + str(laberinto.filas) + "x" + str(laberinto.columnas) +"_"+str(estrategia)+"_20"+ ".png")
