@@ -8,6 +8,7 @@ import os
 import json
 import numpy
 import matplotlib.pyplot as plt
+import Dibujo as d
 from Celda import Celda
 from Direcciones import Direcciones
 
@@ -50,7 +51,7 @@ class Laberinto():
                 self.laberinto[row][col] = Celda(numpy.array(self.data_json["cells"][cellPos]["neighbors"], dtype=bool), \
                     (row, col), numpy.array(self.data_json["cells"][cellPos]["value"], dtype=int))
 
-        self.drawMaze()
+        d.dibujar_laberinto(self)
     '''
     Algoritmo para generar el laberinto mediante el algoritmo de Wilson.
     '''
@@ -162,54 +163,6 @@ class Laberinto():
                 diccionarioJSON["cells"] = cells
 
         json.dump(diccionarioJSON, open(self.savePath, "w"), indent=3)
-
-    '''
-    Las columnas corresponden al eje X y las filas al eje Y.
-    Para acceder a las posiciones del laberinto se accederá de forma que laberinto[y][x]
-    De esta forma, dibujaremos las paredes exteriores del laberinto y para cada celda el sur y el este desde arriba a abajo
-    y de izquierda a derecha. 
-    '''
-    def drawMaze(self):
-        plt.figure(figsize = (self.columnas, self.filas))
-        plt.xticks([])
-        plt.yticks()
-        plt.plot([0, self.columnas], [0, 0], color='black', linewidth=4)
-        plt.plot([0, 0], [0, self.filas], color='black', linewidth=4)
-        plt.plot([0, self.columnas], [self.filas, self.filas], color='black', linewidth=4)
-        plt.plot([self.columnas, self.columnas], [self.filas, 0], color='black', linewidth=4)
-        
-        ax = plt.gca()
-
-        for col in range(self.columnas):
-            for row in range(self.filas):
-                row_inv = self.filas - row - 1
-
-    ############LINEAS################################################
-                if not self.laberinto[row][col].sur:
-                    plt.plot([col, col+1], [row_inv, row_inv], color = 'black',linewidth=3)
-                if not self.laberinto[row][col].este:
-                    plt.plot([col+1, col+1], [row_inv+1, row_inv], color = 'black',linewidth=3)
-                if not self.laberinto[row][col].norte:
-                    plt.plot([col, col+1], [row_inv+1, row_inv+1], color = 'black',linewidth=3)
-                if not self.laberinto[row][col].oeste:
-                    plt.plot([col, col], [row_inv, row_inv+1], color = 'black',linewidth=3)
-
-    #########COLORES##################################################
-                if self.laberinto[row][col].value == 0:
-                    rectangle = plt.Rectangle((col,row_inv),width=1,height=1,facecolor="white")
-                    ax.add_patch(rectangle)
-                if self.laberinto[row][col].value == 1:
-                    rectangle = plt.Rectangle((col,row_inv),width=1,height=1,facecolor="brown")
-                    ax.add_patch(rectangle)
-                if self.laberinto[row][col].value == 2:
-                    rectangle = plt.Rectangle((col,row_inv),width=1,height=1,facecolor="green")
-                    ax.add_patch(rectangle)
-                if self.laberinto[row][col].value == 3:
-                    rectangle = plt.Rectangle((col,row_inv),width=1,height=1,facecolor="blue")
-                    ax.add_patch(rectangle)
-
-        plt.axis("scaled")
-        plt.savefig("Problemas_Generados/" + "puzzle_loop_" + str(self.filas) + "X" + str(self.columnas) + ".png")
 
     def getCelda (self, celda):
         return self.laberinto[celda[0]][celda[1]]
