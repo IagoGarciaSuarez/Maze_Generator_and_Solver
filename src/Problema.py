@@ -28,7 +28,6 @@ class Problema():
             self.objective = eval(self.problem_data["OBJETIVE"])
         else:
             self.pathMaze = path + '_maze.json'
-            self.pathSuc = path + '.txt'
             self.laberinto = Laberinto(False, self.pathMaze, size)
             self.start = (0, 0)
             self.objective = (size[0]-1, size[1]-1)
@@ -73,8 +72,8 @@ class Problema():
         else:
             self.Estrategia = 'A'
         
-        archivo = open("Problemas_Generados/solution_" + str(filas) + "X" + str(columnas) + "_" + self.Estrategia + ".txt", 'w')
-        
+        archivo = open("Archivos_Generados/solution_" + str(filas) + "X" + str(columnas) + "_" + self.Estrategia + ".txt", 'w')
+        archivo.write("[id][cost,state,father_id,action,depth,h,value]\n")
         for n in nodos:
             archivo.write("[" + str(n.id) + "]" + "[" + str(n.costo) + ", " + str(n.estado) + ", " + 
             str(n.padre.estado.id) + ", " + str(n.accion) + ", " + str(n.p) + ", " + str(round(n.h,2)) + ", " + str(round(n.f,2)) + "]\n")

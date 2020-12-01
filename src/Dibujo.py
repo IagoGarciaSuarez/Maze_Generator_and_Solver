@@ -41,7 +41,7 @@ def dibujar_laberinto(laberinto):
                 ax.add_patch(rectangle)
 
     plt.axis("scaled")
-    plt.savefig("Problemas_Generados/" + "puzzle_loop_" + str(laberinto.filas) + "x" + str(laberinto.columnas) + ".png")
+    plt.savefig("Archivos_Generados/" + "puzzle_loop_" + str(laberinto.filas) + "x" + str(laberinto.columnas) + ".png")
 
 
 def dibujar_solucion(laberinto,nodos,frontera,visitados,estrategia):
@@ -84,4 +84,4 @@ def dibujar_solucion(laberinto,nodos,frontera,visitados,estrategia):
                 ax.add_patch(rectangle)
 
     plt.axis("scaled")
-    plt.savefig("Problemas_Generados/" + "solution_" + str(laberinto.filas) + "x" + str(laberinto.columnas) +"_"+str(estrategia)+"_20"+ ".png")
+    plt.savefig("Archivos_Generados/" + "solution_" + str(laberinto.filas) + "x" + str(laberinto.columnas) +"_"+str(estrategia)+"_20"+ ".png")
