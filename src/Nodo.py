@@ -14,13 +14,14 @@ class Nodo:
     
     def crearListaNodosSuc(self, frontera, sucList, nodoActual, prof_max, estrategia):
         listaSuc = []
-        for suc in sucList:
-            accion, celda, costo = suc
-            estado = Estado(celda)
-            nodoSuc = Nodo(frontera.next_id, nodoActual.costo + costo, estado, nodoActual, accion, nodoActual.p + 1, None, self.objetivo)
-            nodoSuc.f = self.calcularValor(estrategia, nodoSuc)
-            listaSuc.append(nodoSuc)
-            frontera.next_id += 1
+        if nodoActual.p <= prof_max:
+            for suc in sucList:
+                accion, celda, costo = suc
+                estado = Estado(celda)
+                nodoSuc = Nodo(frontera.next_id, nodoActual.costo + costo, estado, nodoActual, accion, nodoActual.p + 1, None, self.objetivo)
+                nodoSuc.f = self.calcularValor(estrategia, nodoSuc)
+                listaSuc.append(nodoSuc)
+                frontera.next_id += 1
 
         return listaSuc
     

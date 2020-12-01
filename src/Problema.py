@@ -100,7 +100,7 @@ class Problema():
         h = abs(self.estado.celda.posicion[0] - self.objective[0]) + abs(self.estado.celda.posicion[1] + self.objective[1])
         return h
 
-    def busqueda_acotada(self, estrategia, prof_max=5):
+    def busqueda_acotada(self, estrategia, prof_max=1000000):
         '''
         Función encargada de encontrar la solución dada una estrategia.
         '''
